@@ -60,7 +60,8 @@ export const loadUser = createAsyncThunk(
       localStorage.removeItem("token");
 
       return thunkAPI.rejectWithValue(
-        "Session expired"
+        error.response?.data?.message ||
+          "Session expired"
       );
     }
   }
@@ -82,7 +83,7 @@ const initialState = {
 
   token: localStorage.getItem("token"),
 
-  isAuthenticated: false,
+  isAuthenticated: !!localStorage.getItem("token"),
 
   loading: false,
 
