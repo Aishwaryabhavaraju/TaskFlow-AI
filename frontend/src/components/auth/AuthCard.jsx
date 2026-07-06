@@ -33,7 +33,7 @@ export default function AuthCard({ children }) {
         className="
         w-full
 
-        max-w-md
+        max-w-lg
         "
       >
         {children}

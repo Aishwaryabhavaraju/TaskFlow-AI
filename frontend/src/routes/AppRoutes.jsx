@@ -6,6 +6,8 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 
+import Register from "../pages/auth/Register";
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -36,6 +38,15 @@ export default function AppRoutes() {
         path="*"
         element={<Navigate to="/login" replace />}
       />
+
+      <Route
+        path="/register"
+        element={
+            <PublicRoute>
+            <Register />
+            </PublicRoute>
+        }
+       />
     </Routes>
   );
 }
