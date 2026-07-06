@@ -1,67 +1,48 @@
-export default function Input({
-  label,
-  error,
-  ...props
-}) {
-  return (
-    <div className="mb-5">
+import { forwardRef } from "react";
 
-      <label
-        className="
-        mb-2
-        block
-        text-sm
-        font-medium
-        "
-      >
-        {label}
-      </label>
+const Input = forwardRef(
+  ({ label, error, className = "", ...props }, ref) => {
+    return (
+      <div className="mb-5">
+        <label className="mb-2 block text-sm font-medium">
+          {label}
+        </label>
 
-      <input
-        {...props}
-        className="
-        w-full
+        <input
+          ref={ref}
+          {...props}
+          className={`
+            w-full
+            rounded-xl
+            border
+            border-zinc-300
+            dark:border-zinc-700
+            bg-white
+            dark:bg-zinc-900
+            px-4
+            py-3
+            text-zinc-900
+            dark:text-white
+            placeholder:text-zinc-400
+            outline-none
+            transition
+            focus:border-yellow-500
+            focus:ring-2
+            focus:ring-yellow-500/30
+            ${className}
+          `}
+        />
 
-        rounded-xl
+        {error && (
+          <p className="mt-2 text-sm text-red-500">
+            {error}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
 
-        border
+Input.displayName = "Input";
 
-        border-zinc-300
-
-        dark:border-zinc-700
-
-        bg-white
-
-        dark:bg-zinc-900
-
-        px-4
-
-        py-3
-
-        outline-none
-
-        transition
-
-        focus:border-yellow-500
-
-        focus:ring-2
-
-        focus:ring-yellow-500/30
-        "
-      />
-
-      {error && (
-        <p
-          className="
-          mt-2
-          text-sm
-          text-red-500
-          "
-        >
-          {error}
-        </p>
-      )}
-
-    </div>
-  );
-}
+export default Input;

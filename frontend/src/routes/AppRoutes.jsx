@@ -1,17 +1,21 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-function Home() {
-  return (
-    <h1 className="text-center text-4xl mt-20">
-      TaskFlow AI
-    </h1>
-  );
-}
+import Login from "../pages/auth/Login";
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+
+      <Route
+        path="/"
+        element={<Navigate to="/login" />}
+      />
+
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
     </Routes>
   );
 }
