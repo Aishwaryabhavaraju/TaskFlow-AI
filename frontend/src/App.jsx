@@ -1,23 +1,25 @@
-import ThemeToggle from "./components/common/ThemeToggle";
+import AuthLayout from "./layouts/AuthLayout";
 
 export default function App() {
-    return (
-        <div
-            className="
-            min-h-screen
-            flex
-            flex-col
-            items-center
-            justify-center
-            transition-all
-            duration-300
-            "
-        >
-            <h1 className="text-5xl font-bold mb-8">
-                TaskFlow AI
-            </h1>
+  return (
+    <AuthLayout>
 
-            <ThemeToggle />
-        </div>
-    );
+      <div>
+
+        <p className="uppercase tracking-[0.4em] text-sm text-zinc-500">
+          Welcome Back
+        </p>
+
+        <h1 className="text-5xl font-black mt-3">
+          Sign in to TaskFlow AI
+        </h1>
+
+        <p className="mt-6 text-zinc-500">
+          Login form will be built in Step 2.4.
+        </p>
+
+      </div>
+
+    </AuthLayout>
+  );
 }
