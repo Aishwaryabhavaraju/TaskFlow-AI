@@ -7,6 +7,7 @@ import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 
 import Register from "../pages/auth/Register";
+import ForgotPassword from "../pages/auth/ForgotPassword";
 
 export default function AppRoutes() {
   return (
@@ -47,6 +48,15 @@ export default function AppRoutes() {
             </PublicRoute>
         }
        />
+
+       <Route
+            path="/forgot-password"
+            element={
+                <PublicRoute>
+                    <ForgotPassword />
+                </PublicRoute>
+            }
+        />
     </Routes>
   );
 }

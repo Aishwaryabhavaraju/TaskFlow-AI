@@ -5,6 +5,7 @@ import {
   register,
   getCurrentUser,
   logout,
+  forgotPassword,
 } from "../../api/authApi";
 
 /* ---------------- LOGIN ---------------- */
@@ -42,6 +43,23 @@ export const registerUser = createAsyncThunk(
       return thunkAPI.rejectWithValue(
         error.response?.data?.message ||
           "Registration failed"
+      );
+    }
+  }
+);
+
+export const forgotPasswordUser = createAsyncThunk(
+  "auth/forgotPassword",
+
+  async (email, thunkAPI) => {
+    try {
+      const data = await forgotPassword(email);
+
+      return data.message;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message ||
+        "Unable to send email"
       );
     }
   }
@@ -176,6 +194,20 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
       })
 
+      .addCase(forgotPasswordUser.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+
+        .addCase(forgotPasswordUser.fulfilled, (state) => {
+            state.loading = false;
+        })
+
+        .addCase(forgotPasswordUser.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
+        
       /* LOGOUT */
 
       .addCase(logoutUser.fulfilled, (state) => {
