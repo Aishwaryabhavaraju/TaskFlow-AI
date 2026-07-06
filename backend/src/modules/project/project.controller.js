@@ -1,44 +1,37 @@
 const projectService = require("./project.service");
+const notificationService = require("../notification/notification.service");
 
 exports.createProject = async (req, res) => {
 
-  const project =
-    await projectService.createProject({
+  const project = await projectService.createProject({
+  ...req.body,
+  owner: req.user._id,
+});
 
-      ...req.body,
+for (const memberId of project.members) {
 
-      owner: req.user._id,
+  await notificationService.createNotification({
 
-      members: [req.user._id],
+    recipient: memberId,
 
-    });
+    sender: req.user._id,
 
-  res.status(201).json({
+    type: "PROJECT_CREATED",
 
-    success: true,
+    title: "New Project",
 
-    message: "Project created successfully",
+    message: `${project.name} has been created.`,
 
-    data: project,
-
-  });
-
-};
-
-exports.getProjects = async (req, res) => {
-
-  const projects =
-    await projectService.getProjects(
-      req.user._id
-    );
-
-  res.status(200).json({
-
-    success: true,
-
-    data: projects,
+    project: project._id,
 
   });
+
+}
+
+res.status(201).json({
+  success: true,
+  data: project,
+});
 
 };
 

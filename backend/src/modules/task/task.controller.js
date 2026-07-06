@@ -187,48 +187,54 @@ async (req, res) => {
 
 };
 
-exports.moveTask =
-async (req, res) => {
+exports.moveTask = async (req, res) => {
 
-  const task =
-    await taskService.moveTask(
+  const task = await taskService.moveTask(
+    req.params.id,
+    req.body.columnId,
+    req.body.status
+  );
 
-      req.params.id,
-
-      req.body.columnId,
-
-      req.body.status
-
-    );
+  for (const memberId of task.assignedTo) {
+    await notificationService.createNotification({
+      recipient: memberId,
+      sender: req.user._id,
+      type: "TASK_MOVED",
+      title: "Task Updated",
+      message: `"${task.title}" moved to ${task.status}.`,
+      task: task._id,
+      project: task.project,
+    });
+  }
 
   res.status(200).json({
-
     success: true,
-
     message: "Task moved successfully",
-
     data: task,
-
   });
 
 };
 
-exports.completeTask =
-async (req, res) => {
+exports.completeTask = async (req, res) => {
 
-  const task =
-    await taskService.completeTask(
-      req.params.id
-    );
+  const task = await taskService.completeTask(req.params.id);
+
+  for (const memberId of task.assignedTo) {
+    await notificationService.createNotification({
+      recipient: memberId,
+      sender: req.user._id,
+      type: "TASK_COMPLETED",
+      title: "Task Completed",
+      message: `"${task.title}" has been marked as completed.`,
+      task: task._id,
+      project: task.project,
+    });
+  }
 
   res.status(200).json({
-
     success: true,
-
     message: "Task completed",
-
     data: task,
-
   });
 
 };

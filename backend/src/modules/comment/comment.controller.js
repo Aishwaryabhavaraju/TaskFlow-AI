@@ -16,7 +16,7 @@ exports.createComment = async (req, res) => {
         type: "MENTION",
         title: "You were mentioned",
         message: `${req.user.firstName} mentioned you in the task "${task.title}".`,
-        task: req.body.task,
+        task: comment.task,
       });
     }
   }

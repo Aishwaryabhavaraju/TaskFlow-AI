@@ -13,6 +13,9 @@ const boardRoutes = require("./modules/board/board.routes");
 const taskRoutes = require("./modules/task/task.routes");
 const commentRoutes = require("./modules/comment/comment.routes");
 const notificationRoutes = require("./modules/notification/notification.routes");
+const attachmentRoutes = require("./modules/attachment/attachment.routes");
+const dashboardRoutes = require("./modules/dashboard/dashboard.routes");
+const aiRoutes = require("./modules/ai/ai.routes");
 
 const app = express();
 
@@ -50,6 +53,9 @@ app.use("/api/v1/boards", boardRoutes);
 app.use("/api/v1/tasks", taskRoutes);
 app.use("/api/v1/comments", commentRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/attachments", attachmentRoutes);
+app.use("/api/v1/dashboard", dashboardRoutes);
+app.use("/api/v1/ai", aiRoutes);
 
 // Health Check Route
 app.get("/", (req, res) => {

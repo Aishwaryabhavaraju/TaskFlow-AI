@@ -1,5 +1,4 @@
 const Task = require("../../models/Task");
-const { move } = require("./task.routes");
 
 const createTask = async (data) => {
   return await Task.create(data);
@@ -17,6 +16,10 @@ const getTasks = async (projectId) => {
     .populate(
       "createdBy",
       "firstName lastName"
+    )
+    .populate(
+      "attachments",
+      "originalName fileUrl fileType fileSize uploadedBy createdAt"
     );
 };
 
@@ -29,6 +32,10 @@ const getTask = async (id) => {
     .populate(
       "createdBy",
       "firstName lastName"
+    )
+    .populate(
+      "attachments",
+      "originalName fileUrl fileType fileSize uploadedBy createdAt"
     );
 };
 
@@ -40,7 +47,19 @@ const updateTask = async (id, data) => {
       new: true,
       runValidators: true,
     }
-  );
+  )
+    .populate(
+      "assignedTo",
+      "firstName lastName profilePicture"
+    )
+    .populate(
+      "createdBy",
+      "firstName lastName"
+    )
+    .populate(
+      "attachments",
+      "originalName fileUrl fileType fileSize uploadedBy createdAt"
+    );
 };
 
 const deleteTask = async (id) => {
@@ -55,11 +74,7 @@ const deleteTask = async (id) => {
   );
 };
 
-const assignMembers = async (
-  taskId,
-  members
-) => {
-
+const assignMembers = async (taskId, members) => {
   return await Task.findByIdAndUpdate(
     taskId,
     {
@@ -69,124 +84,91 @@ const assignMembers = async (
       new: true,
     }
   )
-  .populate(
-    "assignedTo",
-    "firstName lastName profilePicture"
-  );
-
+    .populate(
+      "assignedTo",
+      "firstName lastName profilePicture"
+    )
+    .populate(
+      "attachments",
+      "originalName fileUrl fileType fileSize uploadedBy createdAt"
+    );
 };
 
-const updateLabels = async (
-  taskId,
-  labels
-) => {
-
+const updateLabels = async (taskId, labels) => {
   return await Task.findByIdAndUpdate(
-
     taskId,
-
     {
       labels,
     },
-
     {
       new: true,
     }
-
+  ).populate(
+    "attachments",
+    "originalName fileUrl fileType fileSize uploadedBy createdAt"
   );
-
 };
 
-const updatePriority = async (
-  taskId,
-  priority
-) => {
-
+const updatePriority = async (taskId, priority) => {
   return await Task.findByIdAndUpdate(
-
     taskId,
-
     {
       priority,
     },
-
     {
       new: true,
     }
-
+  ).populate(
+    "attachments",
+    "originalName fileUrl fileType fileSize uploadedBy createdAt"
   );
-
 };
 
-const updateDueDate = async (
-  taskId,
-  dueDate
-) => {
-
+const updateDueDate = async (taskId, dueDate) => {
   return await Task.findByIdAndUpdate(
-
     taskId,
-
     {
       dueDate,
     },
-
     {
       new: true,
     }
-
+  ).populate(
+    "attachments",
+    "originalName fileUrl fileType fileSize uploadedBy createdAt"
   );
-
 };
 
-const moveTask = async (
-  taskId,
-  columnId,
-  status
-) => {
-
+const moveTask = async (taskId, columnId, status) => {
   return await Task.findByIdAndUpdate(
-
     taskId,
-
     {
-
       columnId,
-
       status,
-
     },
-
     {
       new: true,
     }
-
+  ).populate(
+    "attachments",
+    "originalName fileUrl fileType fileSize uploadedBy createdAt"
   );
-
 };
 
-const completeTask = async (
-  taskId
-) => {
-
+const completeTask = async (taskId) => {
   return await Task.findByIdAndUpdate(
-
     taskId,
-
     {
-
       status: "Done",
-
       completedAt: new Date(),
-
     },
-
     {
       new: true,
     }
-
+  ).populate(
+    "attachments",
+    "originalName fileUrl fileType fileSize uploadedBy createdAt"
   );
-
 };
 
 const addChecklistItem = async (taskId, item) => {
