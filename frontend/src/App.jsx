@@ -1,25 +1,49 @@
 import AuthLayout from "./layouts/AuthLayout";
 
+import AuthHeader from "./components/auth/AuthHeader";
+
+import Input from "./components/common/Input";
+import PasswordInput from "./components/common/PasswordInput";
+import Checkbox from "./components/common/Checkbox";
+import Button from "./components/common/Button";
+
 export default function App() {
   return (
     <AuthLayout>
+      <AuthHeader
+        title="Welcome Back"
+        subtitle="Sign in to continue to TaskFlow AI."
+      />
 
-      <div>
+      <Input
+        label="Email"
+        type="email"
+        placeholder="Enter your email"
+      />
 
-        <p className="uppercase tracking-[0.4em] text-sm text-zinc-500">
-          Welcome Back
-        </p>
+      <PasswordInput
+        label="Password"
+        placeholder="Enter your password"
+      />
 
-        <h1 className="text-5xl font-black mt-3">
-          Sign in to TaskFlow AI
-        </h1>
+      <div className="mb-6 flex items-center justify-between">
+        <Checkbox label="Remember Me" />
 
-        <p className="mt-6 text-zinc-500">
-          Login form will be built in Step 2.4.
-        </p>
-
+        <button
+          className="
+          text-sm
+          font-medium
+          text-yellow-500
+          hover:underline
+          "
+        >
+          Forgot Password?
+        </button>
       </div>
 
+      <Button>
+        Login
+      </Button>
     </AuthLayout>
   );
 }
