@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "../pages/auth/Login";
+import Dashboard from "../pages/dashboard/Dashboard";
 
 export default function AppRoutes() {
   return (
@@ -14,6 +15,11 @@ export default function AppRoutes() {
       <Route
         path="/login"
         element={<Login />}
+      />
+
+      <Route
+        path="/dashboard"
+        element={<Dashboard />}
       />
 
     </Routes>

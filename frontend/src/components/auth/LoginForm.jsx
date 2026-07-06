@@ -1,17 +1,29 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 import AuthHeader from "./AuthHeader";
-
 import Input from "../common/Input";
 import PasswordInput from "../common/PasswordInput";
 import Checkbox from "../common/Checkbox";
 import Button from "../common/Button";
 
 import { loginSchema } from "../../schemas/authSchemas";
+import { loginUser, clearError } from "../../redux/slices/authSlice";
 
 export default function LoginForm() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const {
+    loading,
+    error,
+    isAuthenticated,
+  } = useSelector((state) => state.auth);
+
   const {
     register,
     handleSubmit,
@@ -27,8 +39,29 @@ export default function LoginForm() {
   });
 
   const onSubmit = (data) => {
-    console.log("Login Data:", data);
+    dispatch(
+      loginUser({
+        email: data.email,
+        password: data.password,
+      })
+    );
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      toast.success("Welcome back!");
+
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+
+      dispatch(clearError());
+    }
+  }, [error, dispatch]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -62,31 +95,21 @@ export default function LoginForm() {
 
         <Link
           to="/forgot-password"
-          className="
-          text-sm
-          font-medium
-          text-yellow-500
-          hover:underline
-          "
+          className="text-sm font-medium text-yellow-500 hover:underline"
         >
           Forgot Password?
         </Link>
 
       </div>
 
-      <Button type="submit">
+      <Button
+        type="submit"
+        loading={loading}
+      >
         Login
       </Button>
 
-      <p
-        className="
-        mt-8
-        text-center
-        text-sm
-        text-zinc-600
-        dark:text-zinc-400
-        "
-      >
+      <p className="mt-8 text-center text-sm text-zinc-600 dark:text-zinc-400">
         Don't have an account?{" "}
         <Link
           to="/register"

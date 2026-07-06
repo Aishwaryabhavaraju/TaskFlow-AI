@@ -2,7 +2,7 @@ import { Loader2 } from "lucide-react";
 
 export default function Button({
   children,
-  loading = false,
+  loading,
   ...props
 }) {
   return (
@@ -10,15 +10,7 @@ export default function Button({
       {...props}
       disabled={loading}
       className="
-      flex
-
       w-full
-
-      items-center
-
-      justify-center
-
-      gap-2
 
       rounded-xl
 
@@ -30,17 +22,25 @@ export default function Button({
 
       text-black
 
-      transition-all
+      transition
 
       hover:bg-yellow-300
 
       disabled:opacity-70
+
+      flex
+
+      justify-center
+
+      items-center
+
+      gap-2
       "
     >
       {loading && (
         <Loader2
-          size={18}
           className="animate-spin"
+          size={18}
         />
       )}
 
