@@ -5,7 +5,7 @@ const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const authRoutes = require("./modules/auth/auth.routes");
-const errorHandler = require("./middleware/errorMiddleware");
+const errorHandler = require("./middleware/errorHandler");
 const userRoutes = require("./modules/user/user.routes");
 const teamRoutes = require("./modules/team/team.routes");
 const projectRoutes = require("./modules/project/project.routes");
@@ -16,6 +16,7 @@ const notificationRoutes = require("./modules/notification/notification.routes")
 const attachmentRoutes = require("./modules/attachment/attachment.routes");
 const dashboardRoutes = require("./modules/dashboard/dashboard.routes");
 const aiRoutes = require("./modules/ai/ai.routes");
+const analyticsRoutes = require("./modules/analytics/analytics.routes");
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/attachments", attachmentRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/ai", aiRoutes);
+app.use("/api/v1/analytics", analyticsRoutes);
 
 // Health Check Route
 app.get("/", (req, res) => {
@@ -67,11 +69,16 @@ app.get("/", (req, res) => {
 
 
 // 404 Route
-app.use((req, res) => {
+app.use("*", (req, res) => {
+
   res.status(404).json({
+
     success: false,
-    message: "Route Not Found",
+
+    message: "Route not found",
+
   });
+
 });
 
 // Error Middleware

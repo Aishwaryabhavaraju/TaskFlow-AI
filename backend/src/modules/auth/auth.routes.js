@@ -8,9 +8,10 @@ const {
   getMe,
   forgotPassword,
   resetPassword,
+  logout,
 } = require("./auth.controller");
 
-const protect = require("./auth.middleware");
+const { protect } = require("./auth.middleware");
 
 const {
   registerValidation,

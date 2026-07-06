@@ -6,7 +6,7 @@ const {
     getProfile,
     updateProfile,
     uploadProfilePicture,
-
+    deleteProfilePicture,
 } = require("./user.controller");
 
 const {
@@ -16,6 +16,7 @@ const {
 const {
     protect,
 } = require("../auth/auth.middleware");
+const upload = require("../../config/multer");
 
 router.get(
     "/profile",
