@@ -6,6 +6,7 @@ import {
   getCurrentUser,
   logout,
   forgotPassword,
+  resetPassword,
 } from "../../api/authApi";
 
 /* ---------------- LOGIN ---------------- */
@@ -80,6 +81,31 @@ export const loadUser = createAsyncThunk(
       return thunkAPI.rejectWithValue(
         error.response?.data?.message ||
           "Session expired"
+      );
+    }
+  }
+);
+
+export const resetPasswordUser = createAsyncThunk(
+  "auth/resetPassword",
+
+  async ({ token, password }, thunkAPI) => {
+    try {
+      const data = await resetPassword(
+        token,
+        password
+      );
+
+        localStorage.setItem(
+            "token",
+            data.token
+        );
+
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message ||
+        "Unable to reset password"
       );
     }
   }
@@ -204,6 +230,24 @@ const authSlice = createSlice({
         })
 
         .addCase(forgotPasswordUser.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+        .addCase(resetPasswordUser.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+
+        .addCase(resetPasswordUser.fulfilled, (state, action) => {
+            state.loading = false;
+
+            state.token = action.payload.token;
+
+            state.isAuthenticated = true;
+        })
+
+        .addCase(resetPasswordUser.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         })

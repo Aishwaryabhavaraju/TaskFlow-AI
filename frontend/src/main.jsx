@@ -6,30 +6,25 @@ import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 
 import App from "./App";
-
 import "./index.css";
 
 import { store } from "./redux/store";
-import { ThemeProvider } from "./contexts/ThemeContext";
+
+import { SidebarProvider } from "./context/SidebarContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <React.StrictMode>
+  <React.StrictMode>
+    <Provider store={store}>
+      <ThemeProvider>
+        <BrowserRouter>
+          <SidebarProvider>
+            <Toaster position="top-right" />
 
-        <Provider store={store}>
-
-            <ThemeProvider>
-
-                <BrowserRouter>
-
-                    <Toaster position="top-right" />
-
-                    <App />
-
-                </BrowserRouter>
-
-            </ThemeProvider>
-
-        </Provider>
-
-    </React.StrictMode>
+            <App />
+          </SidebarProvider>
+        </BrowserRouter>
+      </ThemeProvider>
+    </Provider>
+  </React.StrictMode>
 );
