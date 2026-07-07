@@ -1,20 +1,86 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { Routes, Route } from "react-router-dom";
 
-import AppRoutes from "./routes/AppRoutes";
+import useSocket from "./hooks/useSocket";
 
-import { loadUser } from "./redux/slices/authSlice";
+import NotificationToast from "./components/collaboration/NotificationToast";
 
-export default function App() {
-  const dispatch = useDispatch();
+import Home from "./pages/Home";
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
-    if (token) {
-      dispatch(loadUser());
-    }
-  }, [dispatch]);
+import Dashboard from "./pages/dashboard/Dashboard";
 
-  return <AppRoutes />;
+import WorkspaceHome from "./pages/workspace/WorkspaceHome";
+
+import ProjectsPage from "./pages/projects/ProjectsPage";
+
+import TaskBoard from "./pages/tasks/TaskBoard";
+
+import NotFound from "./pages/NotFound";
+
+function App() {
+  useSocket();
+
+  return (
+    <>
+      <NotificationToast />
+
+      <Routes>
+        <Route
+          path="/"
+          element={<Home />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+
+        <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+
+        <Route
+          path="/reset-password/:token"
+          element={<ResetPassword />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
+
+        <Route
+          path="/workspaces"
+          element={<WorkspaceHome />}
+        />
+
+        <Route
+          path="/projects/:workspaceId"
+          element={<ProjectsPage />}
+        />
+
+        <Route
+          path="/tasks/:projectId"
+          element={<TaskBoard />}
+        />
+
+        <Route
+          path="*"
+          element={<NotFound />}
+        />
+      </Routes>
+    </>
+  );
 }
+
+export default App;

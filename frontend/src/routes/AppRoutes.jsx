@@ -23,6 +23,8 @@ import ProjectDetails from "../pages/project/ProjectDetails";
 import ProjectSettings from "../pages/project/ProjectSettings";
 import ProjectAnalytics from "../pages/analytics/ProjectAnalytics";
 
+import TaskBoard from "../pages/task/TaskBoard";
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -129,6 +131,11 @@ export default function AppRoutes() {
         <Route
           path="/projects/:projectId/analytics"
           element={<ProjectAnalytics />}
+        />
+
+        <Route
+          path="/projects/:projectId/tasks"
+          element={<TaskBoard />}
         />
     </Routes>
   );
