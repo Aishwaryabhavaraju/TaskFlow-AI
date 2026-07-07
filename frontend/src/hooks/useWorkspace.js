@@ -14,6 +14,12 @@ import {
   updateWorkspace,
   deleteWorkspace,
   getWorkspaceMembers,
+  inviteMember,
+  updateMemberRole,
+  removeMember,
+  getWorkspaceSettings,
+  updateWorkspaceSettings,
+  archiveWorkspace,
 } from "../services/workspaceService";
 
 export default function useWorkspace() {
@@ -178,6 +184,128 @@ const fetchMembers = async (workspaceId) => {
   }
 };
 
+const sendInvitation = async (
+  workspaceId,
+  inviteData
+) => {
+  try {
+    dispatch(setLoading(true));
+
+    const data = await inviteMember(
+      workspaceId,
+      inviteData
+    );
+
+    return {
+      success: true,
+      invitation: data,
+    };
+
+  } catch (error) {
+
+    dispatch(setError(error.message));
+
+    return {
+      success: false,
+      message: error.message,
+    };
+
+  } finally {
+
+    dispatch(setLoading(false));
+
+  }
+};
+
+const changeMemberRole = async (
+  workspaceId,
+  memberId,
+  role
+) => {
+  try {
+
+    dispatch(setLoading(true));
+
+    const data = await updateMemberRole(
+      workspaceId,
+      memberId,
+      role
+    );
+
+    return {
+      success: true,
+      member: data.member,
+    };
+
+  } catch (error) {
+
+    dispatch(setError(error.message));
+
+    return {
+      success: false,
+      message: error.message,
+    };
+
+  } finally {
+
+    dispatch(setLoading(false));
+
+  }
+};
+
+const deleteMember = async (
+  workspaceId,
+  memberId
+) => {
+  try {
+
+    dispatch(setLoading(true));
+
+    await removeMember(
+      workspaceId,
+      memberId
+    );
+
+    return {
+      success: true,
+    };
+
+  } catch (error) {
+
+    dispatch(setError(error.message));
+
+    return {
+      success: false,
+      message: error.message,
+    };
+
+  } finally {
+
+    dispatch(setLoading(false));
+
+  }
+};
+
+const fetchSettings = async (workspaceId) => {
+    const data = await getWorkspaceSettings(workspaceId);
+    return data.settings;
+};
+
+const saveSettings = async (
+    workspaceId,
+    settings
+) => {
+    return await updateWorkspaceSettings(
+        workspaceId,
+        settings
+    );
+};
+
+const archiveCurrentWorkspace = async (
+    workspaceId
+) => {
+    return await archiveWorkspace(workspaceId);
+};
   return {
     ...workspace,
 
@@ -187,5 +315,11 @@ const fetchMembers = async (workspaceId) => {
     editWorkspace,
     removeWorkspace,
     fetchMembers,
+    sendInvitation,
+    changeMemberRole,
+    deleteMember,
+    fetchSettings,
+    saveSettings,
+    archiveCurrentWorkspace,
   };
 }

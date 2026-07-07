@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, } from "react";
 import { useParams } from "react-router-dom";
 
 import DashboardLayout from "../../layouts/DashboardLayout";
@@ -7,6 +7,7 @@ import MembersHeader from "../../components/workspace/MembersHeader";
 import MembersGrid from "../../components/workspace/MembersGrid";
 import MemberSearch from "../../components/workspace/MemberSearch";
 import MemberFilter from "../../components/workspace/MemberFilter";
+import InviteMemberModal from "../../components/workspace/InviteMemberModal";
 
 import useWorkspace from "../../hooks/useWorkspace";
 
@@ -21,14 +22,9 @@ export default function WorkspaceMembersPage() {
 
   const [role, setRole] = useState("");
 
+  const [inviteOpen, setInviteOpen] = useState(false);
+
   useEffect(() => {
-    const loadMembers = async () => {
-      const data =
-        await fetchMembers(workspaceId);
-
-      setMembers(data);
-    };
-
     loadMembers();
   }, [workspaceId]);
 
@@ -52,7 +48,11 @@ export default function WorkspaceMembersPage() {
   return (
     <DashboardLayout>
 
-      <MembersHeader />
+      <MembersHeader
+        onInvite={() =>
+          setInviteOpen(true)
+        }
+      />
 
       <div className="mb-6 flex flex-col gap-4 md:flex-row">
 
@@ -72,8 +72,17 @@ export default function WorkspaceMembersPage() {
 
       <MembersGrid
         members={filteredMembers}
+        currentUser={user}
+        onRefresh={loadMembers}
       />
 
+        <InviteMemberModal
+          open={inviteOpen}
+          onClose={() =>
+            setInviteOpen(false)
+          }
+          onSuccess={loadMembers}
+        />
     </DashboardLayout>
   );
 }

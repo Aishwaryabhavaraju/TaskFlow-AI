@@ -16,6 +16,12 @@ import WorkspaceHome from "../pages/workspace/WorkspaceHome";
 import WorkspaceDashboard from "../pages/workspace/WorkspaceDashboard";
 import WorkspaceDetails from "../pages/workspace/WorkspaceDetails";
 import WorkspaceMembersPage from "../pages/workspace/WorkspaceMembersPage";
+import WorkspaceSettings from "../pages/workspace/WorkspaceSettings";
+
+import ProjectsHome from "../pages/project/ProjectsHome";
+import ProjectDetails from "../pages/project/ProjectDetails";
+import ProjectSettings from "../pages/project/ProjectSettings";
+import ProjectAnalytics from "../pages/analytics/ProjectAnalytics";
 
 export default function AppRoutes() {
   return (
@@ -98,6 +104,31 @@ export default function AppRoutes() {
         <Route
           path="/workspaces/:workspaceId/members"
           element={<WorkspaceMembersPage />}
+        />
+
+        <Route
+            path="/workspaces/:workspaceId/settings"
+            element={<WorkspaceSettings />}
+        />
+
+        <Route
+            path="/workspaces/:workspaceId/projects"
+            element={<ProjectsHome />}
+        />
+
+        <Route
+          path="/projects/:projectId"
+          element={<ProjectDetails />}
+        />
+
+        <Route
+          path="/projects/:projectId/settings"
+          element={<ProjectSettings />}
+        />
+
+        <Route
+          path="/projects/:projectId/analytics"
+          element={<ProjectAnalytics />}
         />
     </Routes>
   );

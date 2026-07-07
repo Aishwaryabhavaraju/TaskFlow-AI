@@ -2,6 +2,7 @@ import { User } from "lucide-react";
 
 import RoleBadge from "./RoleBadge";
 import MemberActions from "./MemberActions";
+import PermissionGuard from "./PermissionGuard";
 
 export default function MemberCard({
   member,
@@ -47,7 +48,15 @@ export default function MemberCard({
 
         </div>
 
-        <MemberActions member={member} />
+        <PermissionGuard
+          role={currentUser.role}
+          allowed={["owner", "admin"]}
+        >
+          <MemberActions
+            member={member}
+            onRefresh={onRefresh}
+          />
+        </PermissionGuard>
 
       </div>
 
