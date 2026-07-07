@@ -7,7 +7,7 @@ import DueDateBadge from "./DueDateBadge";
 import TaskFooter from "./TaskFooter";
 import TaskMenu from "./TaskMenu";
 import AIBadge from "./AIBadge";
-
+import RecurrenceBadge from "../recurrence/RecurrenceBadge";
 import TaskDrawer from "../drawer/TaskDrawer";
 
 export default function TaskCard({ task }) {
@@ -31,6 +31,12 @@ export default function TaskCard({ task }) {
         <div className="mb-4 flex items-start justify-between">
           <PriorityBadge priority={task.priority} />
 
+        <RecurrenceBadge
+
+        recurrence={task.recurrence}
+
+        />
+        
           {/* Prevent menu click from opening drawer twice */}
           <div onClick={(e) => e.stopPropagation()}>
             <TaskMenu />

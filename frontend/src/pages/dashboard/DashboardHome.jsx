@@ -12,7 +12,24 @@ import RecentActivity from "../../components/dashboard/RecentActivity";
 import PageHeader from "../../components/layout/PageHeader";
 import Button from "../../components/common/Button";
 
+import CalendarSummary from "../../components/dashboard/CalendarSummary";
+import MiniCalendar from "../../components/dashboard/MiniCalendar";
+import TodayTasksWidget from "../../components/dashboard/TodayTasksWidget";
+import UpcomingTasksWidget from "../../components/dashboard/UpcomingTasksWidget";
+import OverdueTasksWidget from "../../components/dashboard/OverdueTasksWidget";
+import NextEventWidget from "../../components/dashboard/NextEventWidget";
+
+import {
+  getTodayTasks,
+  getUpcomingTasks,
+  getOverdueTasks,
+} from "../../utils/dashboardCalendarUtils";
+
 export default function DashboardHome() {
+  const todayTasks = getTodayTasks(tasks);
+const upcomingTasks = getUpcomingTasks(tasks);
+const overdueTasks = getOverdueTasks(tasks);
+
   return (
     <div className="space-y-8">
       {/* Page Header */}
@@ -32,6 +49,33 @@ export default function DashboardHome() {
       {/* Quick Actions */}
       <QuickActions />
 
+      <CalendarSummary
+    today={todayTasks.length}
+    upcoming={upcomingTasks.length}
+    overdue={overdueTasks.length}
+  />
+
+  <div className="mt-8 grid gap-6 lg:grid-cols-2">
+    <MiniCalendar events={events} />
+
+    <NextEventWidget
+      event={events[0]}
+    />
+  </div>
+
+  <div className="mt-8 grid gap-6 lg:grid-cols-3">
+    <TodayTasksWidget
+      tasks={todayTasks}
+    />
+
+    <UpcomingTasksWidget
+      tasks={upcomingTasks.slice(0, 5)}
+    />
+
+    <OverdueTasksWidget
+      tasks={overdueTasks}
+    />
+  </div>
       {/* Project & Task Overview */}
       <div className="grid gap-6 lg:grid-cols-2">
         <ProjectOverview />

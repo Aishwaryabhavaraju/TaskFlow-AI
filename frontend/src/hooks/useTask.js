@@ -152,11 +152,18 @@ export default function useTask() {
       dispatch(removeTask(id));
     });
 
+    socket.on(
+      "taskScheduleUpdated",
+      task => {
+        dispatch(updateTask(task));
+      }
+    );
     return () => {
       socket.off("taskCreated");
       socket.off("taskUpdated");
       socket.off("taskMoved");
       socket.off("taskDeleted");
+      socket.off("taskScheduleUpdated");
     };
   }, [dispatch]);
 

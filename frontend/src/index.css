@@ -30,3 +30,95 @@ html.light body {
   background: #fafafa;
   color: #18181b;
 }
+
+.fc {
+  font-family: inherit;
+}
+
+.fc-toolbar-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.fc-daygrid-event {
+  border-radius: 6px;
+  padding: 2px 4px;
+}
+
+.fc-button {
+  text-transform: capitalize;
+}
+
+.dark .fc-theme-standard td,
+.dark .fc-theme-standard th {
+  border-color: rgb(63 63 70);
+}
+
+.dark .fc-scrollgrid {
+  border-color: rgb(63 63 70);
+}
+
+.dark .fc {
+  color: white;
+}
+
+.dark .fc-button {
+  background: #27272a;
+  border: none;
+}
+
+.fc-timegrid-slot {
+  height: 3rem;
+}
+
+.fc-timegrid-now-indicator-line {
+  border-color: #ef4444;
+}
+
+.fc-timegrid-now-indicator-arrow {
+  border-top-color: #ef4444;
+}
+
+.fc-timegrid-event {
+  border-radius: 8px;
+}
+
+.fc-timegrid-event .fc-event-main {
+  padding: 4px;
+}
+
+.dark .fc-timegrid-slot,
+.dark .fc-timegrid-axis,
+.dark .fc-col-header-cell {
+  background-color: #18181b;
+}
+
+.dark .fc-timegrid-slot,
+.dark .fc-theme-standard td,
+.dark .fc-theme-standard th {
+  border-color: #3f3f46;
+}
+
+.fc-timegrid-axis-cushion {
+  font-weight: 600;
+}
+
+.fc-timegrid-col-events {
+  margin: 0 4px;
+}
+
+.fc-event-main {
+  font-size: 0.8rem;
+}
+
+.dark .fc-timegrid-axis {
+  background: #18181b;
+}
+
+.dark .fc-timegrid-slot-label {
+  color: #d4d4d8;
+}
+
+.dark .fc-col-header-cell {
+  background: #18181b;
+}

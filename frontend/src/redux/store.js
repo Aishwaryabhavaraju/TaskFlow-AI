@@ -17,6 +17,12 @@ import aiReducer from "./slices/aiSlice";
 
 import activityReducer from "./slices/activitySlice";
 
+import calendarReducer from "./slices/calendarSlice";
+import timelineReducer from "./slices/timelineSlice";
+import googleCalendarReducer from "./slices/googleCalendarSlice";
+import recurringTaskReducer from "./slices/recurringTaskSlice";
+import outlookCalendarReducer from "./slices/outlookCalendarSlice";
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -28,5 +34,10 @@ export const store = configureStore({
     attachments: attachmentReducer,
     ai: aiReducer,
     activity: activityReducer,
+    calendar: calendarReducer,
+    timeline: timelineReducer,
+    recurringTask: recurringTaskReducer,
+    googleCalendar: googleCalendarReducer,
+    outlookCalendar: outlookCalendarReducer,
   },
 });

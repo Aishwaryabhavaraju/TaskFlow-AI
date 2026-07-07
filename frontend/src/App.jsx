@@ -21,6 +21,9 @@ import TaskBoard from "./pages/tasks/TaskBoard";
 
 import NotFound from "./pages/NotFound";
 
+import CalendarPage from "./pages/calendar/CalendarPage";
+import TimelinePage from "./pages/timeline/TimelinePage";
+
 function App() {
   useSocket();
 
@@ -77,6 +80,16 @@ function App() {
         <Route
           path="*"
           element={<NotFound />}
+        />
+
+        <Route
+          path="/calendar"
+          element={<CalendarPage />}
+        />
+        
+        <Route
+          path="/timeline"
+          element={<TimelinePage />}
         />
       </Routes>
     </>
