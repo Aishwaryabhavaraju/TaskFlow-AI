@@ -5,7 +5,6 @@ import CommentsSection from "./CommentsSection";
 import AttachmentsSection from "./AttachmentsSection";
 import ActivityTimeline from "./ActivityTimeline";
 import AISuggestions from "../ai/AISuggestions";
-import ActivityTimeline from "../activity/ActivityTimeline";
 
 export default function TaskDrawer({
   open,

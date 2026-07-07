@@ -10,11 +10,13 @@ import MemberFilter from "../../components/workspace/MemberFilter";
 import InviteMemberModal from "../../components/workspace/InviteMemberModal";
 
 import useWorkspace from "../../hooks/useWorkspace";
+import useAuth from "../../hooks/useAuth";
 
 export default function WorkspaceMembersPage() {
   const { workspaceId } = useParams();
 
   const { fetchMembers } = useWorkspace();
+  const { user } = useAuth();
 
   const [members, setMembers] = useState([]);
 
@@ -23,6 +25,11 @@ export default function WorkspaceMembersPage() {
   const [role, setRole] = useState("");
 
   const [inviteOpen, setInviteOpen] = useState(false);
+
+  const loadMembers = async () => {
+    const data = await fetchMembers(workspaceId);
+    setMembers(data);
+  };
 
   useEffect(() => {
     loadMembers();

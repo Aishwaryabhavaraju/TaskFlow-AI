@@ -14,8 +14,6 @@ import CalendarFilters from "../../components/calendar/CalendarFilters";
 import useCalendarFilters from "../../hooks/useCalendarFilters";
 import { filterCalendarEvents } from "../../utils/calendarFilter";
 import useCalendar from "../../hooks/useCalendar";
-import GoogleCalendarCard from "../../components/calendar/GoogleCalendarCard";
-import OutlookCalendarCard from "../../components/calendar/OutlookCalendarCard";
 
 export default function CalendarPage() {
   const {
@@ -86,20 +84,6 @@ const filteredEvents =
             />
         )}
         </CalendarContainer>
-    </DashboardLayout>
-  );
-}
-
-export default function CalendarSettings() {
-  return (
-    <DashboardLayout>
-      <div className="grid gap-6 lg:grid-cols-2">
-
-        <GoogleCalendarCard />
-
-        <OutlookCalendarCard />
-
-      </div>
     </DashboardLayout>
   );
 }

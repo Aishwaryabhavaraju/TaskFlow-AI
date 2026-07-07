@@ -7,10 +7,15 @@ const {
     updateProfile,
     uploadProfilePicture,
     deleteProfilePicture,
+    changePassword,
+    searchUsers,
+    getUserById,
+    deactivateAccount,
 } = require("./user.controller");
 
 const {
     updateProfileValidation,
+    changePasswordValidation,
 } = require("./user.validation");
 
 const {

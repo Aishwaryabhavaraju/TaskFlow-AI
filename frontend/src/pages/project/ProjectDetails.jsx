@@ -7,7 +7,6 @@ import useProject from "../../hooks/useProject";
 
 import ProjectOverview from "../../components/project/ProjectOverview";
 import ProjectProgress from "../../components/project/ProjectProgress";
-import ProjectMembersCard from "../../components/project/ProjectMembersCard";
 import ProjectQuickActions from "../../components/project/ProjectQuickActions";
 import ProjectActivity from "../../components/project/ProjectActivity";
 import ProjectAIInsights from "../../components/project/ProjectAIInsights";

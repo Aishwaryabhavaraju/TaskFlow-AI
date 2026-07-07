@@ -16,7 +16,7 @@ export default function useLogout() {
       toast.success("Logged out successfully");
 
       navigate("/login");
-    } catch (error) {
+    } catch {
       toast.error("Unable to logout");
     }
   };

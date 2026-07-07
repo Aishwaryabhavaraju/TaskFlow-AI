@@ -1,6 +1,5 @@
 import { X } from "lucide-react";
 import TaskForm from "./TaskForm";
-import RecurrenceSelector from "../recurrence/RecurrenceSelector";
 
 export default function CreateTaskModal({
   open,
@@ -8,9 +7,6 @@ export default function CreateTaskModal({
   projectId,
 }) {
   if (!open) return null;
-
-  const [recurrence, setRecurrence] =
-useState("None");
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">

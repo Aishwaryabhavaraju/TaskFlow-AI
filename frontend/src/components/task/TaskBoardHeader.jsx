@@ -1,5 +1,3 @@
-import Button from "../common/Button";
-import { Plus } from "lucide-react";
 import LiveIndicator from "../collaboration/LiveIndicator";
 
 export default function TaskBoardHeader({

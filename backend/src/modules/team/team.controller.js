@@ -64,12 +64,12 @@ exports.inviteMember = async (req, res) => {
     );
 
     await notificationService.createNotification({
-      recipient: invitedUser._id,
+      recipient: invitation.receiver,
       sender: req.user._id,
       type: "TEAM_INVITE",
       title: "Team Invitation",
       message: `${req.user.firstName} invited you to join the team.`,
-      team: team._id,
+      team: invitation.team,
     });
   res.status(201).json({
     success: true,

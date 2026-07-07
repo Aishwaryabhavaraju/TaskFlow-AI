@@ -1,4 +1,6 @@
-import { formatDistanceToNow } from "date-fns";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 export default function CommentItem({
   comment,
@@ -16,12 +18,7 @@ export default function CommentItem({
 
         <span className="text-sm text-zinc-500">
 
-          {formatDistanceToNow(
-            new Date(comment.createdAt),
-            {
-              addSuffix: true,
-            }
-          )}
+          {dayjs(comment.createdAt).fromNow()}
 
         </span>
 

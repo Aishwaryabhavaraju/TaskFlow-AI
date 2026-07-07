@@ -4,7 +4,6 @@ import { toast } from "react-hot-toast";
 import googleCalendarService from "../services/googleCalendarService";
 
 import {
-  setConnected,
   setEvents,
   setLoading,
   setError,
@@ -56,7 +55,7 @@ export default function useGoogleCalendar() {
         "Google Calendar synchronized."
       );
 
-    } catch (error) {
+    } catch {
 
       toast.error("Sync failed");
     }

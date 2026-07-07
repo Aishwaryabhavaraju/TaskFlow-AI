@@ -34,7 +34,7 @@ export default function MonthlyCalendar({
             info.event.start,
             info.event.end
           );
-        } catch (error) {
+        } catch {
           info.revert();
         }
       }}
@@ -45,7 +45,7 @@ export default function MonthlyCalendar({
             info.event.start,
             info.event.end
           );
-        } catch (error) {
+        } catch {
           info.revert();
         }
       }}

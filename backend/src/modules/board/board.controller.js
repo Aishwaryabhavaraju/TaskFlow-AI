@@ -92,3 +92,30 @@ exports.createColumn = async (
   });
 
 };
+
+exports.updateColumn = async (req, res) => {
+  const board = await boardService.updateColumn(
+    req.params.id,
+    req.params.columnId,
+    req.body
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "Column updated successfully",
+    data: board,
+  });
+};
+
+exports.deleteColumn = async (req, res) => {
+  const board = await boardService.deleteColumn(
+    req.params.id,
+    req.params.columnId
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "Column deleted successfully",
+    data: board,
+  });
+};

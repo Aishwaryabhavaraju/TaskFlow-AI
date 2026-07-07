@@ -9,6 +9,18 @@ const controller =
 require("./analytics.controller");
 
 router.get(
+  "/projects/:projectId",
+  protect,
+  controller.getProjectReport
+);
+
+router.get(
+  "/projects/:projectId/export/:format",
+  protect,
+  controller.exportProjectReport
+);
+
+router.get(
   "/task-status",
   protect,
   controller.getTaskStatus

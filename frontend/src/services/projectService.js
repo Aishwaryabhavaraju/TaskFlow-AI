@@ -1,4 +1,4 @@
-import api from "./api";
+import api from "../api/axios";
 
 export const getProjects = async (workspaceId) => {
   const response = await api.get(
@@ -56,14 +56,6 @@ export const archiveProject = async (id) => {
 export const restoreProject = async (id) => {
   const response = await api.patch(
     `/projects/${id}/restore`
-  );
-
-  return response.data;
-};
-
-export const deleteProject = async (id) => {
-  const response = await api.delete(
-    `/projects/${id}`
   );
 
   return response.data;

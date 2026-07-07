@@ -11,6 +11,9 @@ const {
   getBoard,
   updateBoard,
   deleteBoard,
+  createColumn,
+  updateColumn,
+  deleteColumn,
 } = require("./board.controller");
 
 const {

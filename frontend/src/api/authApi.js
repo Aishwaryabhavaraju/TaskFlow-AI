@@ -52,7 +52,7 @@ export const resetPassword = async (
   token,
   password
 ) => {
-  const response = await axiosInstance.put(
+  const response = await axiosInstance.post(
     `/auth/reset-password/${token}`,
     {
       password,

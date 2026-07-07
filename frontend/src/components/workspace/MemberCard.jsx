@@ -6,6 +6,8 @@ import PermissionGuard from "./PermissionGuard";
 
 export default function MemberCard({
   member,
+  currentUser,
+  onRefresh,
 }) {
   return (
     <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-6">
@@ -48,15 +50,17 @@ export default function MemberCard({
 
         </div>
 
-        <PermissionGuard
-          role={currentUser.role}
-          allowed={["owner", "admin"]}
-        >
-          <MemberActions
-            member={member}
-            onRefresh={onRefresh}
-          />
-        </PermissionGuard>
+        {currentUser && (
+          <PermissionGuard
+            role={currentUser.role}
+            allowed={["owner", "admin"]}
+          >
+            <MemberActions
+              member={member}
+              onRefresh={onRefresh}
+            />
+          </PermissionGuard>
+        )}
 
       </div>
 

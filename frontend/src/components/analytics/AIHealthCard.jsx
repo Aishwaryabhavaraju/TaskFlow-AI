@@ -1,21 +1,22 @@
-export default function AIHealthCard({
-  analytics,
-}) {
+export default function AIHealthCard({ analytics }) {
   return (
-    <div className="rounded-2xl border border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/20 p-6">
+    <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-800 dark:bg-emerald-950/30">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold">
+          AI Insights
+        </h2>
+        <span className="text-3xl font-bold">
+          {analytics.overview.healthScore}/100
+        </span>
+      </div>
 
-      <h2 className="mb-5 text-lg font-semibold">
-        AI Health Score
-      </h2>
-
-      <p className="text-5xl font-bold">
-        {analytics.healthScore}/100
-      </p>
-
-      <p className="mt-4 text-zinc-600 dark:text-zinc-300">
-        {analytics.aiSuggestion}
-      </p>
-
+      <ul className="space-y-3 text-sm text-zinc-700 dark:text-zinc-200">
+        {analytics.aiRecommendations.map((item) => (
+          <li key={item} className="leading-6">
+            {item}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

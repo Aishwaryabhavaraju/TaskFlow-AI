@@ -108,3 +108,12 @@ exports.deleteProject = async (
   });
 
 };
+
+exports.getProjects = async (req, res) => {
+  const projects = await projectService.getProjects(req.user._id);
+
+  res.status(200).json({
+    success: true,
+    data: projects,
+  });
+};

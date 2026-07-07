@@ -48,66 +48,70 @@ const userSchema = new mongoose.Schema(
     },
 
     phone: {
-        type: String,
-        default: "",
+      type: String,
+      default: "",
     },
 
     jobTitle: {
-        type: String,
-        default: "",
+      type: String,
+      default: "",
     },
 
     department: {
-        type: String,
-        default: "",
+      type: String,
+      default: "",
     },
 
     location: {
-        type: String,
-        default: "",
+      type: String,
+      default: "",
     },
 
-    skills: [{
-        type: String
-    }],
+    skills: [
+      {
+        type: String,
+      },
+    ],
 
     website: {
-        type: String,
-        default: "",
+      type: String,
+      default: "",
     },
 
     github: {
-        type: String,
-        default: "",
+      type: String,
+      default: "",
     },
 
     linkedin: {
-        type: String,
-        default: "",
+      type: String,
+      default: "",
     },
 
     timezone: {
-        type: String,
-        default: "Asia/Kolkata",
+      type: String,
+      default: "Asia/Kolkata",
     },
 
     role: {
-        type: String,
-        enum: ["admin", "manager", "user"],
-        default: "user",
+      type: String,
+      enum: ["admin", "manager", "user"],
+      default: "user",
     },
 
     status: {
-        type: String,
-        enum: ["active", "inactive", "blocked"],
-        default: "active",
+      type: String,
+      enum: ["active", "inactive", "blocked"],
+      default: "active",
     },
 
     lastLogin: {
-        type: Date,
+      type: Date,
     },
 
-    emailVerifiedAt: Date,
+    emailVerifiedAt: {
+      type: Date,
+    },
 
     isVerified: {
       type: Boolean,
@@ -115,37 +119,49 @@ const userSchema = new mongoose.Schema(
     },
 
     isDeleted: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
 
-    resetPasswordToken: String,
+    resetPasswordToken: {
+      type: String,
+    },
 
-    resetPasswordExpire: Date,
+    resetPasswordExpire: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// Hash password before saving
-userSchema.pre("save", async function (next) {
+/**
+ * Hash password before saving
+ */
+userSchema.pre("save", async function () {
   if (!this.isModified("password")) {
-    return next();
+    return;
   }
 
   const salt = await bcrypt.genSalt(10);
 
   this.password = await bcrypt.hash(this.password, salt);
-
-  next();
 });
 
-// Compare password
+/**
+ * Compare entered password with hashed password
+ */
 userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  return await bcrypt.compare(
+    enteredPassword,
+    this.password
+  );
 };
 
+/**
+ * Generate password reset token
+ */
 userSchema.methods.getResetPasswordToken = function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
 
@@ -154,7 +170,8 @@ userSchema.methods.getResetPasswordToken = function () {
     .update(resetToken)
     .digest("hex");
 
-  this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
+  this.resetPasswordExpire =
+    Date.now() + 15 * 60 * 1000; // 15 minutes
 
   return resetToken;
 };

@@ -4,7 +4,6 @@ import { toast } from "react-hot-toast";
 import outlookCalendarService from "../services/outlookCalendarService";
 
 import {
-  setConnected,
   setEvents,
   setLoading,
   setError,

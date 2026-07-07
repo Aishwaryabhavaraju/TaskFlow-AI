@@ -23,7 +23,7 @@ export default function useRecurringTask() {
 
     }
 
-    catch (error) {
+    catch {
 
       toast.error(
         "Unable to update recurring task."

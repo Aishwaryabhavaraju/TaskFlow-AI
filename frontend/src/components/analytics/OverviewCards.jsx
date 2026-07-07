@@ -1,31 +1,26 @@
 import OverviewCard from "./OverviewCard";
 
-export default function OverviewCards({
-  analytics,
-}) {
+export default function OverviewCards({ analytics }) {
+  const { overview } = analytics;
+
   return (
-    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       <OverviewCard
-        title="Tasks"
-        value={analytics.totalTasks}
+        title="Total Tasks"
+        value={overview.totalTasks}
       />
-
       <OverviewCard
         title="Completed"
-        value={analytics.completedTasks}
+        value={overview.completedTasks}
       />
-
       <OverviewCard
-        title="Members"
-        value={analytics.totalMembers}
+        title="Team Members"
+        value={overview.totalMembers}
       />
-
       <OverviewCard
-        title="Completion"
-        value={`${analytics.progress}%`}
+        title="Health Score"
+        value={`${overview.healthScore}/100`}
       />
-
     </div>
   );
 }

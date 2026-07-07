@@ -3,7 +3,7 @@ export default function OverviewCard({
   value,
 }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-6">
+    <div className="rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900">
 
       <h3 className="text-zinc-500">
         {title}

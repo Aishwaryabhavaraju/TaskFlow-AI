@@ -25,10 +25,38 @@ import {
   getOverdueTasks,
 } from "../../utils/dashboardCalendarUtils";
 
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import useCalendar from "../../hooks/useCalendar";
+import { setTasks } from "../../redux/slices/taskSlice";
+import calendarService from "../../services/calendarService";
+
 export default function DashboardHome() {
+  const dispatch = useDispatch();
+  const { fetchEvents } = useCalendar();
+
+  const tasks = useSelector((state) => state.tasks.tasks) || [];
+  const events = useSelector((state) => state.calendar.events) || [];
+
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      try {
+        const data = await calendarService.getCalendarEvents();
+        if (data && data.tasks) {
+          dispatch(setTasks(data.tasks));
+        }
+      } catch (err) {
+        console.error("Failed to load dashboard tasks", err);
+      }
+    };
+
+    loadDashboardData();
+    fetchEvents();
+  }, [dispatch, fetchEvents]);
+
   const todayTasks = getTodayTasks(tasks);
-const upcomingTasks = getUpcomingTasks(tasks);
-const overdueTasks = getOverdueTasks(tasks);
+  const upcomingTasks = getUpcomingTasks(tasks);
+  const overdueTasks = getOverdueTasks(tasks);
 
   return (
     <div className="space-y-8">

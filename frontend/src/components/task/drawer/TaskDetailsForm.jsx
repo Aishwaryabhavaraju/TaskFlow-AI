@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Button from "../../common/Button";
+import AIAssistant from "../ai/AIAssistant";
 import useTask from "../../../hooks/useTask";
 
 export default function TaskDetailsForm({
