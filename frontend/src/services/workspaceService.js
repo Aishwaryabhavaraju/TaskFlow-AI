@@ -23,3 +23,30 @@ export const createWorkspace = async (formData) => {
 
   return response.data;
 };
+
+export const updateWorkspace = async (id, formData) => {
+  const response = await api.put(
+    `/workspaces/${id}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response.data;
+};
+
+export const deleteWorkspace = async (id) => {
+  const response = await api.delete(`/workspaces/${id}`);
+  return response.data;
+};
+
+export const getWorkspaceMembers = async (workspaceId) => {
+  const response = await api.get(
+    `/workspaces/${workspaceId}/members`
+  );
+
+  return response.data;
+};

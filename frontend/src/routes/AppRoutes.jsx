@@ -13,6 +13,9 @@ import ResetPassword from "../pages/auth/ResetPassword";
 import Appearance from "../pages/settings/Appearance";
 
 import WorkspaceHome from "../pages/workspace/WorkspaceHome";
+import WorkspaceDashboard from "../pages/workspace/WorkspaceDashboard";
+import WorkspaceDetails from "../pages/workspace/WorkspaceDetails";
+import WorkspaceMembersPage from "../pages/workspace/WorkspaceMembersPage";
 
 export default function AppRoutes() {
   return (
@@ -82,6 +85,20 @@ export default function AppRoutes() {
             element={<WorkspaceHome />}
         />
         
+        <Route
+          path="/workspaces/:workspaceId"
+          element={<WorkspaceDashboard />}
+        />
+
+        <Route
+          path="/workspaces/:workspaceId/details"
+          element={<WorkspaceDetails />}
+        />
+
+        <Route
+          path="/workspaces/:workspaceId/members"
+          element={<WorkspaceMembersPage />}
+        />
     </Routes>
   );
 }
