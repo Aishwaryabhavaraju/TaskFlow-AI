@@ -35,7 +35,7 @@ export default function useWorkspace() {
 
       const data = await getWorkspaces();
 
-      dispatch(setWorkspaces(data.workspaces));
+      dispatch(setWorkspaces(data));
 
     } catch (error) {
 
@@ -54,7 +54,7 @@ export default function useWorkspace() {
 
       const data = await getWorkspaceById(id);
 
-      dispatch(setCurrentWorkspace(data.workspace));
+      dispatch(setCurrentWorkspace(data));
 
     } catch (error) {
 
@@ -76,7 +76,7 @@ export default function useWorkspace() {
     dispatch(
       setWorkspaces([
         ...workspace.workspaces,
-        data.workspace,
+        data,
       ])
     );
 

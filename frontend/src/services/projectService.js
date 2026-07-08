@@ -1,11 +1,13 @@
 import api from "../api/axios";
 
 export const getProjects = async (workspaceId) => {
-  const response = await api.get(
-    `/projects/workspace/${workspaceId}`
-  );
+  const endpoint = workspaceId
+    ? `/projects/workspace/${workspaceId}`
+    : "/projects";
 
-  return response.data;
+  const response = await api.get(endpoint);
+
+  return response.data.data;
 };
 
 export const getProject = async (projectId) => {
@@ -13,7 +15,7 @@ export const getProject = async (projectId) => {
     `/projects/${projectId}`
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const createProject = async (data) => {
@@ -22,7 +24,7 @@ export const createProject = async (data) => {
     data
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const updateProject = async (
@@ -34,7 +36,7 @@ export const updateProject = async (
     data
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const deleteProject = async (id) => {
@@ -42,7 +44,7 @@ export const deleteProject = async (id) => {
     `/projects/${id}`
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const archiveProject = async (id) => {
@@ -50,7 +52,7 @@ export const archiveProject = async (id) => {
     `/projects/${id}/archive`
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const restoreProject = async (id) => {
@@ -58,5 +60,5 @@ export const restoreProject = async (id) => {
     `/projects/${id}/restore`
   );
 
-  return response.data;
+  return response.data.data;
 };

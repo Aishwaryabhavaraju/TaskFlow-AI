@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import AppLoader from "../components/common/AppLoader";
 
@@ -10,13 +10,17 @@ const Login = lazy(() => import("../pages/auth/Login"));
 const Register = lazy(() => import("../pages/auth/Register"));
 const ForgotPassword = lazy(() => import("../pages/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/auth/ResetPassword"));
-const LandingPage = lazy(() => import("../pages/landing/LandingPage"));
 
 const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
 const Appearance = lazy(() => import("../pages/settings/Appearance"));
 const SettingsAdministration = lazy(() =>
   import("../pages/settings/SettingsAdministration")
 );
+const CalendarPage = lazy(() => import("../pages/calendar/CalendarPage"));
+const TeamsPage = lazy(() => import("../pages/teams/TeamsPage"));
+const AnalyticsPage = lazy(() => import("../pages/analytics/AnalyticsPage"));
+const ReportsPage = lazy(() => import("../pages/reports/ReportsPage"));
+const FilesPage = lazy(() => import("../pages/files/FilesPage"));
 
 const WorkspaceHome = lazy(() => import("../pages/workspace/WorkspaceHome"));
 const WorkspaceDashboard = lazy(() =>
@@ -53,7 +57,7 @@ export default function AppRoutes() {
       <Routes>
         <Route
           path="/"
-          element={<LandingPage />}
+          element={privatePage(<Navigate to="/dashboard" replace />)}
         />
 
         <Route
@@ -95,6 +99,41 @@ export default function AppRoutes() {
         <Route
           path="/dashboard"
           element={privatePage(<Dashboard />)}
+        />
+
+        <Route
+          path="/projects"
+          element={privatePage(<ProjectsHome />)}
+        />
+
+        <Route
+          path="/tasks"
+          element={privatePage(<TaskBoard />)}
+        />
+
+        <Route
+          path="/teams"
+          element={privatePage(<TeamsPage />)}
+        />
+
+        <Route
+          path="/calendar"
+          element={privatePage(<CalendarPage />)}
+        />
+
+        <Route
+          path="/analytics"
+          element={privatePage(<AnalyticsPage />)}
+        />
+
+        <Route
+          path="/reports"
+          element={privatePage(<ReportsPage />)}
+        />
+
+        <Route
+          path="/files"
+          element={privatePage(<FilesPage />)}
         />
 
         <Route

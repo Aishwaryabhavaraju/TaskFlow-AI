@@ -259,16 +259,20 @@ Install dependencies
 npm install
 ```
 
-Create a `.env` file and add the following variables:
+Create a `.env` file in `backend` and add the following variables:
 
 ```env
 PORT=5000
+
+NODE_ENV=development
 
 MONGO_URI=
 
 JWT_SECRET=
 
-JWT_EXPIRE=7d
+JWT_EXPIRES_IN=7d
+
+CLIENT_URL=http://localhost:5173
 
 EMAIL_USER=
 
@@ -282,6 +286,15 @@ CLOUDINARY_API_SECRET=
 
 OPENAI_API_KEY=
 ```
+
+Copy the frontend example file to `frontend/.env` and update the API URL values if needed:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000/api/v1
+VITE_SOCKET_URL=http://localhost:5000
+```
+
+Do not commit any `.env` files. Use the provided `backend/.env.example` and `frontend/.env.example` templates instead.
 
 Start the development server
 

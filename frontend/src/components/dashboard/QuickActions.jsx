@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
   PlusCircle,
   FolderPlus,
@@ -5,18 +6,23 @@ import {
 } from "lucide-react";
 
 export default function QuickActions() {
+  const navigate = useNavigate();
+
   const actions = [
     {
       title: "New Project",
       icon: FolderPlus,
+      path: "/projects",
     },
     {
       title: "New Task",
       icon: PlusCircle,
+      path: "/tasks",
     },
     {
       title: "Ask AI",
       icon: Bot,
+      path: "/ai",
     },
   ];
 
@@ -41,6 +47,8 @@ export default function QuickActions() {
         {actions.map((action) => (
           <button
             key={action.title}
+            type="button"
+            onClick={() => navigate(action.path)}
             className="
             rounded-xl
             border

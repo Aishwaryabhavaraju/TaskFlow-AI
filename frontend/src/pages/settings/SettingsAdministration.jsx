@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   Activity,
@@ -31,6 +32,10 @@ import DashboardLayout from "../../layouts/DashboardLayout";
 import PageHeader from "../../components/layout/PageHeader";
 import useAuth from "../../hooks/useAuth";
 import useTheme from "../../hooks/useTheme";
+import useWorkspace from "../../hooks/useWorkspace";
+import toast from "react-hot-toast";
+import { loadUser } from "../../redux/slices/authSlice";
+import * as userService from "../../services/userService";
 
 const sections = [
   { id: "profile", label: "Profile", icon: User },
@@ -280,8 +285,10 @@ function StatusBadge({ children, tone = "neutral" }) {
 }
 
 export default function SettingsAdministration() {
+  const dispatch = useDispatch();
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { currentWorkspace, saveSettings } = useWorkspace();
   const [activeSection, setActiveSection] = useState("profile");
   const [showKeys, setShowKeys] = useState(false);
   const [memberSearch, setMemberSearch] = useState("");
@@ -289,8 +296,8 @@ export default function SettingsAdministration() {
     firstName: user?.firstName || "Ananda",
     lastName: user?.lastName || "Kamala",
     email: user?.email || "ananda@taskflow.ai",
-    title: "Product Lead",
-    timezone: "Asia/Calcutta",
+    title: user?.jobTitle || "Product Lead",
+    timezone: user?.timezone || "Asia/Calcutta",
   });
   const [workspace, setWorkspace] = useState({
     name: "My Workspace",
@@ -313,6 +320,49 @@ export default function SettingsAdministration() {
     sessionAlerts: true,
     ssoEnforced: false,
   });
+
+  useEffect(() => {
+    // Initialize profile form values once the authenticated user loads.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setProfile((current) => ({
+      ...current,
+      firstName: user?.firstName || current.firstName,
+      lastName: user?.lastName || current.lastName,
+      email: user?.email || current.email,
+      title: user?.jobTitle || current.title,
+      timezone: user?.timezone || current.timezone,
+    }));
+  }, [user]);
+
+  const handleSaveSettings = async () => {
+    try {
+      if (user) {
+        await userService.updateProfile({
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          email: profile.email,
+          jobTitle: profile.title,
+          timezone: profile.timezone,
+        });
+
+        dispatch(loadUser());
+      }
+
+      if (currentWorkspace?._id) {
+        await saveSettings(currentWorkspace._id, {
+          profile,
+          workspace,
+          project,
+          settings,
+        });
+      }
+
+      toast.success("Settings saved successfully.");
+    } catch (error) {
+      console.error("Save settings failed", error);
+      toast.error("Unable to save settings. Please try again.");
+    }
+  };
 
   const filteredMembers = useMemo(() => {
     const query = memberSearch.trim().toLowerCase();
@@ -351,7 +401,9 @@ export default function SettingsAdministration() {
         title="Settings & Administration"
         description="Manage users, workspaces, projects, billing, provider keys, logs, and security from one place."
       >
-        <ActionButton icon={Save}>Save changes</ActionButton>
+        <ActionButton icon={Save} onClick={handleSaveSettings}>
+          Save changes
+        </ActionButton>
       </PageHeader>
 
       <div className="grid gap-6 xl:grid-cols-[260px_1fr]">

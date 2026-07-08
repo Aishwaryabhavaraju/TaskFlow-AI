@@ -17,6 +17,8 @@ import {
 
 import SEO from "../../components/common/SEO";
 import useAuth from "../../hooks/useAuth";
+import useLogout from "../../hooks/useLogout";
+import ThemeToggle from "../../components/common/ThemeToggle";
 
 const features = [
   {
@@ -189,7 +191,8 @@ function ProductScene() {
 }
 
 export default function LandingPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const logout = useLogout();
   const appPath = isAuthenticated ? "/dashboard" : "/register";
 
   return (
@@ -220,20 +223,45 @@ export default function LandingPage() {
             </a>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Link
-              to="/login"
-              className="rounded-lg px-3 py-2 text-sm font-semibold text-zinc-200 hover:bg-white/10"
-            >
-              Sign in
-            </Link>
-            <Link
-              to={appPath}
-              className="inline-flex items-center gap-2 rounded-lg bg-yellow-400 px-3 py-2 text-sm font-semibold text-black hover:bg-yellow-300"
-            >
-              {isAuthenticated ? "Dashboard" : "Get started"}
-              <ArrowRight size={16} />
-            </Link>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+
+            {isAuthenticated ? (
+              <div className="flex items-center gap-3">
+                <span className="hidden sm:inline text-sm font-medium text-zinc-300">
+                  Hi, {user?.firstName}
+                </span>
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center gap-2 rounded-lg bg-yellow-400 px-3 py-2 text-sm font-semibold text-black hover:bg-yellow-300"
+                >
+                  Dashboard
+                  <ArrowRight size={16} />
+                </Link>
+                <button
+                  onClick={logout}
+                  className="rounded-lg px-3 py-2 text-sm font-semibold text-zinc-200 hover:bg-white/10 cursor-pointer"
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/login"
+                  className="rounded-lg px-3 py-2 text-sm font-semibold text-zinc-200 hover:bg-white/10"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  to={appPath}
+                  className="inline-flex items-center gap-2 rounded-lg bg-yellow-400 px-3 py-2 text-sm font-semibold text-black hover:bg-yellow-300"
+                >
+                  Get started
+                  <ArrowRight size={16} />
+                </Link>
+              </div>
+            )}
           </div>
         </nav>
       </header>

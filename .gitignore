@@ -2,7 +2,15 @@
 node_modules/
 
 # Environment
-.env
+*.env
+*.env.local
+*.env.development
+*.env.production
+
+# Allow example env templates
+!*.env.example
+!backend/.env.example
+!frontend/.env.example
 
 # Logs
 logs/

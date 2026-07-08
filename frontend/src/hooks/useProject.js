@@ -31,7 +31,7 @@ export default function useProject() {
         );
 
       dispatch(
-        setProjects(data.projects || [])
+        setProjects(data || [])
       );
 
     } catch (error) {
@@ -53,11 +53,11 @@ export default function useProject() {
 
     const data = await projectService.createProject(projectData);
 
-    dispatch(addProject(data.project));
+    dispatch(addProject(data));
 
     return {
       success: true,
-      project: data.project,
+      project: data,
     };
   } catch (error) {
     dispatch(setError(error.message));
@@ -78,9 +78,9 @@ const fetchProject = async (projectId) => {
     const data =
       await projectService.getProject(projectId);
 
-    dispatch(setCurrentProject(data.project));
+    dispatch(setCurrentProject(data));
 
-    return data.project;
+    return data;
 
   } catch (error) {
 
@@ -104,8 +104,8 @@ const editProject = async (projectId, projectData) => {
       projectData
     );
 
-    dispatch(updateProject(data.project));
-    dispatch(setCurrentProject(data.project));
+    dispatch(updateProject(data));
+    dispatch(setCurrentProject(data));
 
     return {
       success: true,

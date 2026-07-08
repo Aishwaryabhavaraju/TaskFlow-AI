@@ -50,7 +50,6 @@ export default function LoginForm() {
   useEffect(() => {
     if (isAuthenticated) {
       toast.success("Welcome back!");
-
       navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);

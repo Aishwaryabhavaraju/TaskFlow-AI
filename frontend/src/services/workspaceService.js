@@ -2,12 +2,12 @@ import api from "../api/axios";
 
 export const getWorkspaces = async () => {
   const response = await api.get("/workspaces");
-  return response.data;
+  return response.data.data;
 };
 
 export const getWorkspaceById = async (id) => {
   const response = await api.get(`/workspaces/${id}`);
-  return response.data;
+  return response.data.data;
 };
 
 export const createWorkspace = async (formData) => {
@@ -21,7 +21,7 @@ export const createWorkspace = async (formData) => {
     }
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const updateWorkspace = async (id, formData) => {
@@ -35,12 +35,12 @@ export const updateWorkspace = async (id, formData) => {
     }
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const deleteWorkspace = async (id) => {
   const response = await api.delete(`/workspaces/${id}`);
-  return response.data;
+  return response.data.data;
 };
 
 export const getWorkspaceMembers = async (workspaceId) => {
@@ -48,7 +48,7 @@ export const getWorkspaceMembers = async (workspaceId) => {
     `/workspaces/${workspaceId}/members`
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const inviteMember = async (workspaceId, data) => {
@@ -57,7 +57,7 @@ export const inviteMember = async (workspaceId, data) => {
     data
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const updateMemberRole = async (
@@ -70,7 +70,7 @@ export const updateMemberRole = async (
     { role }
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const removeMember = async (
@@ -81,7 +81,7 @@ export const removeMember = async (
     `/workspaces/${workspaceId}/members/${memberId}`
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const getWorkspaceSettings = async (workspaceId) => {
@@ -89,7 +89,7 @@ export const getWorkspaceSettings = async (workspaceId) => {
     `/workspaces/${workspaceId}/settings`
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const updateWorkspaceSettings = async (
@@ -101,7 +101,7 @@ export const updateWorkspaceSettings = async (
     data
   );
 
-  return response.data;
+  return response.data.data;
 };
 
 export const archiveWorkspace = async (
@@ -111,5 +111,5 @@ export const archiveWorkspace = async (
     `/workspaces/${workspaceId}/archive`
   );
 
-  return response.data;
+  return response.data.data;
 };

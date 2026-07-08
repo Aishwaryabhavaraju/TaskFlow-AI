@@ -1,9 +1,11 @@
 import api from "../api/axios";
 
 export const getTasks = async (projectId) => {
-  const { data } = await api.get(
-    `/tasks?project=${projectId}`
-  );
+  const endpoint = projectId
+    ? `/tasks?project=${projectId}`
+    : "/tasks";
+
+  const { data } = await api.get(endpoint);
 
   return data;
 };

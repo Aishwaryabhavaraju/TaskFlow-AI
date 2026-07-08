@@ -27,12 +27,14 @@ import {
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import useCalendar from "../../hooks/useCalendar";
 import { setTasks } from "../../redux/slices/taskSlice";
 import calendarService from "../../services/calendarService";
 
 export default function DashboardHome() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { fetchEvents } = useCalendar();
 
   const tasks = useSelector((state) => state.tasks.tasks) || [];
@@ -65,7 +67,7 @@ export default function DashboardHome() {
         title="Dashboard"
         description="Monitor projects, tasks, productivity, and AI insights."
       >
-        <Button>New Project</Button>
+        <Button onClick={() => navigate("/projects")}>New Project</Button>
       </PageHeader>
 
       {/* Welcome Banner */}
