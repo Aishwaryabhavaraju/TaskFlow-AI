@@ -23,8 +23,25 @@ router.post(
   createComment
 );
 
+router.post(
+  "/:taskId",
+  protect,
+  (req, res, next) => {
+    req.body.task = req.params.taskId;
+    next();
+  },
+  createCommentValidation,
+  createComment
+);
+
 router.get(
   "/task/:taskId",
+  protect,
+  getTaskComments
+);
+
+router.get(
+  "/:taskId",
   protect,
   getTaskComments
 );

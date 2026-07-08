@@ -13,7 +13,7 @@ import {
 
 export default function useAI() {
 
-  const dispatch = useDispatch();
+const dispatch = useDispatch();
 
   const state = useSelector(
     state => state.ai
@@ -86,6 +86,35 @@ async(task)=>{
 
 };
 
+  const runFeature = async (
+    feature,
+    payload
+  ) => {
+    dispatch(setLoading(true));
+    dispatch(setError(null));
+
+    try {
+      const data = await aiService.runAIFeature(
+        feature,
+        payload
+      );
+
+      dispatch(setResult(data));
+
+      return data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "AI request failed";
+
+      dispatch(setError(message));
+      throw error;
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   return {
 
     ...state,
@@ -95,6 +124,7 @@ async(task)=>{
 
     generateTaskDescription,
     generateSmartSuggestions,
+    runFeature,
     clearSuggestions:()=>dispatch(clearSuggestions()),
 
   };

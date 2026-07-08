@@ -43,6 +43,13 @@ const taskSchema = new mongoose.Schema(
       },
     ],
 
+    watchers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+
     priority: {
       type: String,
       enum: [

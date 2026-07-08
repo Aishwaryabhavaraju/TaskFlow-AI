@@ -16,6 +16,8 @@ const {
   updateLabels,
   updatePriority,
   updateDueDate,
+  watchTask,
+  unwatchTask,
   moveTask,
   completeTask,
   addChecklistItem,
@@ -81,6 +83,18 @@ router.put(
   "/:id/due-date",
   protect,
   updateDueDate
+);
+
+router.put(
+  "/:id/watch",
+  protect,
+  watchTask
+);
+
+router.delete(
+  "/:id/watch",
+  protect,
+  unwatchTask
 );
 
 router.put(

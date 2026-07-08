@@ -28,7 +28,7 @@ export default function useComment() {
       const data =
         await commentService.getComments(taskId);
 
-      dispatch(setComments(data.comments));
+      dispatch(setComments(data.comments || data.data));
 
     } catch (error) {
 
@@ -53,7 +53,7 @@ export default function useComment() {
         text
       );
 
-    dispatch(addComment(data.comment));
+    dispatch(addComment(data.comment || data.data));
 
   };
 
@@ -68,7 +68,7 @@ export default function useComment() {
         text
       );
 
-    dispatch(updateComment(data.comment));
+    dispatch(updateComment(data.comment || data.data));
 
   };
 

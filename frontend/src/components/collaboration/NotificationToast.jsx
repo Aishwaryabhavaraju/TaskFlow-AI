@@ -6,18 +6,25 @@ export default function NotificationToast() {
 
   useEffect(() => {
 
+    const showNotification = notification => {
+      toast(
+        notification?.message ||
+          notification?.title ||
+          "New notification"
+      );
+    };
+
     socket.on(
-      "notification",
-      message => {
-
-        toast(message);
-
-      }
+      "notification:new",
+      showNotification
     );
 
     return () => {
 
-      socket.off("notification");
+      socket.off(
+        "notification:new",
+        showNotification
+      );
 
     };
 

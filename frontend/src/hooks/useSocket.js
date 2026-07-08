@@ -16,7 +16,7 @@ export default function useSocket() {
     socket.connect();
 
     socket.emit("join", {
-      userId: user.id,
+      userId: user.id || user._id,
     });
 
     return () => {

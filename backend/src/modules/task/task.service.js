@@ -1,65 +1,53 @@
 const Task = require("../../models/Task");
 
+const populateTask = (query) =>
+  query
+    .populate(
+      "assignedTo",
+      "firstName lastName profilePicture"
+    )
+    .populate(
+      "watchers",
+      "firstName lastName profilePicture"
+    )
+    .populate(
+      "createdBy",
+      "firstName lastName"
+    )
+    .populate(
+      "attachments",
+      "originalName fileUrl fileType fileSize uploadedBy createdAt"
+    );
+
 const createTask = async (data) => {
-  return await Task.create(data);
+  const task = await Task.create(data);
+  return await populateTask(Task.findById(task._id));
 };
 
 const getTasks = async (projectId) => {
-  return await Task.find({
-    project: projectId,
-    isDeleted: false,
-  })
-    .populate(
-      "assignedTo",
-      "firstName lastName profilePicture"
-    )
-    .populate(
-      "createdBy",
-      "firstName lastName"
-    )
-    .populate(
-      "attachments",
-      "originalName fileUrl fileType fileSize uploadedBy createdAt"
-    );
+  return await populateTask(
+    Task.find({
+      project: projectId,
+      isDeleted: false,
+    })
+  );
 };
 
 const getTask = async (id) => {
-  return await Task.findById(id)
-    .populate(
-      "assignedTo",
-      "firstName lastName profilePicture"
-    )
-    .populate(
-      "createdBy",
-      "firstName lastName"
-    )
-    .populate(
-      "attachments",
-      "originalName fileUrl fileType fileSize uploadedBy createdAt"
-    );
+  return await populateTask(Task.findById(id));
 };
 
 const updateTask = async (id, data) => {
-  return await Task.findByIdAndUpdate(
-    id,
-    data,
-    {
-      new: true,
-      runValidators: true,
-    }
-  )
-    .populate(
-      "assignedTo",
-      "firstName lastName profilePicture"
+  return await populateTask(
+    Task.findByIdAndUpdate(
+      id,
+      data,
+      {
+        new: true,
+        runValidators: true,
+      }
     )
-    .populate(
-      "createdBy",
-      "firstName lastName"
-    )
-    .populate(
-      "attachments",
-      "originalName fileUrl fileType fileSize uploadedBy createdAt"
-    );
+  );
 };
 
 const deleteTask = async (id) => {
@@ -75,99 +63,126 @@ const deleteTask = async (id) => {
 };
 
 const assignMembers = async (taskId, members) => {
-  return await Task.findByIdAndUpdate(
-    taskId,
-    {
-      assignedTo: members,
-    },
-    {
-      new: true,
-    }
-  )
-    .populate(
-      "assignedTo",
-      "firstName lastName profilePicture"
+  return await populateTask(
+    Task.findByIdAndUpdate(
+      taskId,
+      {
+        assignedTo: members,
+        $addToSet: {
+          watchers: { $each: members || [] },
+        },
+      },
+      {
+        new: true,
+      }
     )
-    .populate(
-      "attachments",
-      "originalName fileUrl fileType fileSize uploadedBy createdAt"
-    );
+  );
 };
 
 const updateLabels = async (taskId, labels) => {
-  return await Task.findByIdAndUpdate(
-    taskId,
-    {
-      labels,
-    },
-    {
-      new: true,
-    }
-  ).populate(
-    "attachments",
-    "originalName fileUrl fileType fileSize uploadedBy createdAt"
+  return await populateTask(
+    Task.findByIdAndUpdate(
+      taskId,
+      {
+        labels,
+      },
+      {
+        new: true,
+      }
+    )
   );
 };
 
 const updatePriority = async (taskId, priority) => {
-  return await Task.findByIdAndUpdate(
-    taskId,
-    {
-      priority,
-    },
-    {
-      new: true,
-    }
-  ).populate(
-    "attachments",
-    "originalName fileUrl fileType fileSize uploadedBy createdAt"
+  return await populateTask(
+    Task.findByIdAndUpdate(
+      taskId,
+      {
+        priority,
+      },
+      {
+        new: true,
+      }
+    )
   );
 };
 
 const updateDueDate = async (taskId, dueDate) => {
-  return await Task.findByIdAndUpdate(
-    taskId,
-    {
-      dueDate,
-    },
-    {
-      new: true,
-    }
-  ).populate(
-    "attachments",
-    "originalName fileUrl fileType fileSize uploadedBy createdAt"
+  return await populateTask(
+    Task.findByIdAndUpdate(
+      taskId,
+      {
+        dueDate,
+      },
+      {
+        new: true,
+      }
+    )
+  );
+};
+
+const watchTask = async (taskId, userId) => {
+  return await populateTask(
+    Task.findByIdAndUpdate(
+      taskId,
+      {
+        $addToSet: {
+          watchers: userId,
+        },
+      },
+      {
+        new: true,
+      }
+    )
+  );
+};
+
+const unwatchTask = async (taskId, userId) => {
+  return await populateTask(
+    Task.findByIdAndUpdate(
+      taskId,
+      {
+        $pull: {
+          watchers: userId,
+        },
+      },
+      {
+        new: true,
+      }
+    )
   );
 };
 
 const moveTask = async (taskId, columnId, status) => {
-  return await Task.findByIdAndUpdate(
-    taskId,
-    {
-      columnId,
-      status,
-    },
-    {
-      new: true,
-    }
-  ).populate(
-    "attachments",
-    "originalName fileUrl fileType fileSize uploadedBy createdAt"
+  const update = { status };
+
+  if (columnId) {
+    update.columnId = columnId;
+  }
+
+  return await populateTask(
+    Task.findByIdAndUpdate(
+      taskId,
+      update,
+      {
+        new: true,
+      }
+    )
   );
 };
 
 const completeTask = async (taskId) => {
-  return await Task.findByIdAndUpdate(
-    taskId,
-    {
-      status: "Done",
-      completedAt: new Date(),
-    },
-    {
-      new: true,
-    }
-  ).populate(
-    "attachments",
-    "originalName fileUrl fileType fileSize uploadedBy createdAt"
+  return await populateTask(
+    Task.findByIdAndUpdate(
+      taskId,
+      {
+        status: "Done",
+        completedAt: new Date(),
+      },
+      {
+        new: true,
+      }
+    )
   );
 };
 
@@ -248,6 +263,8 @@ module.exports = {
   updateLabels,
   updatePriority,
   updateDueDate,
+  watchTask,
+  unwatchTask,
   moveTask,
   completeTask,
   addChecklistItem,

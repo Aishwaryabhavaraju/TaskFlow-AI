@@ -5,6 +5,7 @@ export default function NotificationPanel({
   unreadCount,
   onRead,
   onReadAll,
+  loading,
 }) {
   return (
     <div
@@ -49,10 +50,13 @@ export default function NotificationPanel({
 
         <button
           onClick={onReadAll}
+          disabled={!unreadCount}
           className="
           text-sm
           text-yellow-500
           hover:underline
+          disabled:cursor-not-allowed
+          disabled:text-zinc-400
           "
         >
           Mark all read
@@ -60,10 +64,16 @@ export default function NotificationPanel({
       </div>
 
       <div className="max-h-[450px] overflow-y-auto p-4">
-        <NotificationList
-          notifications={notifications}
-          onRead={onRead}
-        />
+        {loading ? (
+          <p className="p-6 text-center text-sm text-zinc-500">
+            Loading notifications...
+          </p>
+        ) : (
+          <NotificationList
+            notifications={notifications}
+            onRead={onRead}
+          />
+        )}
       </div>
     </div>
   );

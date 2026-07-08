@@ -10,6 +10,7 @@ export default function NotificationButton() {
   const {
     notifications,
     unreadCount,
+    loading,
     markAsRead,
     markAllAsRead,
   } = useNotifications();
@@ -57,6 +58,7 @@ export default function NotificationButton() {
           unreadCount={unreadCount}
           onRead={markAsRead}
           onReadAll={markAllAsRead}
+          loading={loading}
         />
       )}
 

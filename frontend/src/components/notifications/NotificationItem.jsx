@@ -1,26 +1,42 @@
 import {
   Bot,
   CheckSquare,
+  MessageCircle,
   FolderKanban,
+  AtSign,
+  Bell,
   Users,
 } from "lucide-react";
 
 const icons = {
-  task: CheckSquare,
-  project: FolderKanban,
-  ai: Bot,
-  team: Users,
+  TASK_ASSIGNED: CheckSquare,
+  TASK_UPDATED: CheckSquare,
+  TASK_COMPLETED: CheckSquare,
+  TASK_MOVED: CheckSquare,
+  TASK_DUE: CheckSquare,
+  COMMENT: MessageCircle,
+  MENTION: AtSign,
+  PROJECT_CREATED: FolderKanban,
+  TEAM_INVITE: Users,
+  DAILY_DIGEST: Bot,
+  SYSTEM: Bell,
 };
 
 export default function NotificationItem({
   notification,
   onRead,
 }) {
-  const Icon = icons[notification.type];
+  const Icon = icons[notification.type] || Bell;
+  const createdAt = notification.createdAt
+    ? new Date(notification.createdAt)
+    : null;
 
   return (
     <button
-      onClick={() => onRead(notification.id)}
+      onClick={() =>
+        !notification.isRead &&
+        onRead(notification._id)
+      }
       className={`
       w-full
       rounded-xl
@@ -29,7 +45,7 @@ export default function NotificationItem({
       transition
 
       ${
-        notification.read
+        notification.isRead
           ? "bg-transparent"
           : "bg-yellow-50 dark:bg-yellow-900/20"
       }
@@ -55,7 +71,9 @@ export default function NotificationItem({
           </p>
 
           <span className="mt-2 block text-xs text-zinc-400">
-            {notification.time}
+            {createdAt
+              ? createdAt.toLocaleString()
+              : ""}
           </span>
 
         </div>

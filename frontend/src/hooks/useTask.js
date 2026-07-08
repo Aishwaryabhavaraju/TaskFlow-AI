@@ -31,7 +31,7 @@ export default function useTask() {
     try {
       const data = await taskService.getTasks(projectId);
 
-      dispatch(setTasks(data.tasks));
+      dispatch(setTasks(data.tasks || data.data));
     } catch (err) {
       dispatch(setError(err.message));
     } finally {
@@ -49,11 +49,11 @@ export default function useTask() {
     try {
       const data = await taskService.createTask(payload);
 
-      dispatch(addTask(data.task));
+      dispatch(addTask(data.task || data.data));
 
-      socket.emit("taskCreated", data.task);
+      socket.emit("taskCreated", data.task || data.data);
 
-      return data.task;
+      return data.task || data.data;
     } catch (err) {
       dispatch(setError(err.message));
     } finally {
@@ -74,11 +74,11 @@ export default function useTask() {
         payload
       );
 
-      dispatch(updateTask(data.task));
+      dispatch(updateTask(data.task || data.data));
 
-      socket.emit("taskUpdated", data.task);
+      socket.emit("taskUpdated", data.task || data.data);
 
-      return data.task;
+      return data.task || data.data;
     } catch (err) {
       dispatch(setError(err.message));
     } finally {
@@ -101,9 +101,9 @@ export default function useTask() {
           status
         );
 
-      dispatch(updateTask(data.task));
+      dispatch(updateTask(data.task || data.data));
 
-      socket.emit("taskMoved", data.task);
+      socket.emit("taskMoved", data.task || data.data);
     } catch (err) {
       dispatch(setError(err.message));
     }

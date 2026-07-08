@@ -72,3 +72,41 @@ async (req, res) => {
   });
 
 };
+
+exports.getPreferences = async (req, res) => {
+  const preferences =
+    await notificationService.getPreferences(
+      req.user._id
+    );
+
+  res.status(200).json({
+    success: true,
+    data: preferences,
+  });
+};
+
+exports.updatePreferences = async (req, res) => {
+  const preferences =
+    await notificationService.updatePreferences(
+      req.user._id,
+      req.body
+    );
+
+  res.status(200).json({
+    success: true,
+    message: "Notification preferences updated",
+    data: preferences,
+  });
+};
+
+exports.sendDailyDigest = async (req, res) => {
+  const result =
+    await notificationService.sendDailyDigest(
+      req.user._id
+    );
+
+  res.status(200).json({
+    success: true,
+    data: result,
+  });
+};

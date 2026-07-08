@@ -10,6 +10,10 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async (options) => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    return;
+  }
+
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: options.email,

@@ -24,6 +24,7 @@ import ProjectSettings from "../pages/project/ProjectSettings";
 import ProjectAnalytics from "../pages/analytics/ProjectAnalytics";
 
 import TaskBoard from "../pages/task/TaskBoard";
+import AIAssistantPage from "../pages/ai/AIAssistantPage";
 
 export default function AppRoutes() {
   return (
@@ -136,6 +137,15 @@ export default function AppRoutes() {
         <Route
           path="/projects/:projectId/tasks"
           element={<TaskBoard />}
+        />
+
+        <Route
+          path="/ai"
+          element={
+            <PrivateRoute>
+              <AIAssistantPage />
+            </PrivateRoute>
+          }
         />
     </Routes>
   );

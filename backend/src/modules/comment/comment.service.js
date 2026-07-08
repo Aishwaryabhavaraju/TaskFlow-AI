@@ -15,19 +15,19 @@ const getTaskComments = async (taskId) => {
     )
     .populate(
       "mentions",
-      "firstName lastName"
+      "firstName lastName username profilePicture"
     )
     .sort({ createdAt: 1 });
 };
 
 const updateComment = async (
   id,
-  content
+  data
 ) => {
   return await Comment.findByIdAndUpdate(
     id,
     {
-      content,
+      ...data,
       edited: true,
       editedAt: new Date(),
     },

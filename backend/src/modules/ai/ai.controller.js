@@ -1,158 +1,164 @@
-const aiService =
-require("./ai.service");
+const aiService = require("./ai.service");
 
-exports.askAI =
-async (req, res) => {
-
-  const result =
-    await aiService.generateResponse(
-      req.body.prompt
-    );
-
+const sendData = (res, data) => {
   res.status(200).json({
-
     success: true,
-
-    data: result,
-
+    data,
+    result: data,
   });
-
 };
 
-exports.generateTaskDescription =
-async (req, res) => {
+exports.askAI = async (req, res) => {
+  const result = await aiService.chatAssistant({
+    ...req.body,
+    message: req.body.prompt || req.body.message,
+  });
 
-  const prompt = `
+  sendData(res, result);
+};
+
+exports.generateTaskDescription = async (req, res) => {
+  const result = await aiService.generateResponse(`
 Generate a professional task description.
 
 Task Title:
-
 ${req.body.title}
-`;
-
-  const result =
-    await aiService.generateResponse(prompt);
+`);
 
   res.status(200).json({
-
     success: true,
-
     data: result,
-
+    description: result,
   });
-
 };
 
-exports.summarizeProject =
-async (req, res) => {
-
-  const prompt = `
+exports.summarizeProject = async (req, res) => {
+  const result = req.body.projectId
+    ? await aiService.summarizeProject(req.body)
+    : await aiService.generateResponse(`
 Summarize this project:
 
 ${req.body.project}
-`;
+`);
 
-  const result =
-    await aiService.generateResponse(prompt);
-
-  res.status(200).json({
-
-    success: true,
-
-    data: result,
-
-  });
-
+  sendData(res, result);
 };
 
-exports.suggestPriority =
-async (req, res) => {
+exports.suggestPriority = async (req, res) => {
+  const result = await aiService.prioritizeTasks(
+    req.body
+  );
 
-  const prompt = `
-Suggest a priority
-(Low, Medium, High, Urgent)
+  sendData(res, result);
+};
 
-Task:
+exports.estimateTime = async (req, res) => {
+  const result = await aiService.generateResponse(`
+Estimate the time required for this task.
 
 ${req.body.task}
-`;
+`);
 
-  const result =
-    await aiService.generateResponse(prompt);
-
-  res.status(200).json({
-
-    success: true,
-
-    data: result,
-
-  });
-
+  sendData(res, result);
 };
 
-exports.estimateTime =
-async (req, res) => {
-
-  const prompt = `
-Estimate the time required
-for this task.
-
-${req.body.task}
-`;
-
-  const result =
-    await aiService.generateResponse(prompt);
-
-  res.status(200).json({
-
-    success: true,
-
-    data: result,
-
-  });
-
-};
-
-exports.improveComment =
-async (req, res) => {
-
-  const prompt = `
+exports.improveComment = async (req, res) => {
+  const result = await aiService.generateResponse(`
 Rewrite this comment professionally.
 
 ${req.body.comment}
-`;
+`);
 
-  const result =
-    await aiService.generateResponse(prompt);
-
-  res.status(200).json({
-
-    success: true,
-
-    data: result,
-
-  });
-
+  sendData(res, result);
 };
 
-exports.generateWeeklyReport =
-async (req, res) => {
-
-  const prompt = `
+exports.generateWeeklyReport = async (req, res) => {
+  const result = await aiService.generateResponse(`
 Create a weekly project report.
 
 ${req.body.data}
-`;
+`);
 
-  const result =
-    await aiService.generateResponse(prompt);
+  sendData(res, result);
+};
 
-  res.status(200).json({
+exports.generateTaskSuggestions = async (req, res) => {
+  const result = await aiService.taskSuggestions(
+    req.body
+  );
 
-    success: true,
+  sendData(res, result);
+};
 
-    data: result,
+exports.sprintPlanning = async (req, res) => {
+  sendData(
+    res,
+    await aiService.sprintPlanning(req.body)
+  );
+};
 
-  });
+exports.riskDetection = async (req, res) => {
+  sendData(
+    res,
+    await aiService.detectRisks(req.body)
+  );
+};
 
+exports.workloadBalancing = async (req, res) => {
+  sendData(
+    res,
+    await aiService.balanceWorkload(req.body)
+  );
+};
+
+exports.taskPrioritization = async (req, res) => {
+  sendData(
+    res,
+    await aiService.prioritizeTasks(req.body)
+  );
+};
+
+exports.deadlinePrediction = async (req, res) => {
+  sendData(
+    res,
+    await aiService.predictDeadlines(req.body)
+  );
+};
+
+exports.meetingNotes = async (req, res) => {
+  sendData(
+    res,
+    await aiService.generateMeetingNotes(req.body)
+  );
+};
+
+exports.projectSummary = async (req, res) => {
+  sendData(
+    res,
+    await aiService.summarizeProject(req.body)
+  );
+};
+
+exports.chatAssistant = async (req, res) => {
+  sendData(
+    res,
+    await aiService.chatAssistant(req.body)
+  );
+};
+
+exports.naturalLanguageTask = async (req, res) => {
+  sendData(
+    res,
+    await aiService.naturalLanguageTask({
+      ...req.body,
+      createdBy: req.user._id,
+    })
+  );
+};
+
+exports.productivityInsights = async (req, res) => {
+  sendData(
+    res,
+    await aiService.productivityInsights(req.body)
+  );
 };

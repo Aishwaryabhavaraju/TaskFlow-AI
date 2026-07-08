@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const { protect } =
-require("../auth/auth.middleware");
+  require("../auth/auth.middleware");
 
 const {
   askAI,
@@ -13,13 +13,21 @@ const {
   estimateTime,
   improveComment,
   generateWeeklyReport,
+  generateTaskSuggestions,
+  sprintPlanning,
+  riskDetection,
+  workloadBalancing,
+  taskPrioritization,
+  deadlinePrediction,
+  meetingNotes,
+  projectSummary,
+  chatAssistant,
+  naturalLanguageTask,
+  productivityInsights,
 } = require("./ai.controller");
 
-router.post(
-  "/ask",
-  protect,
-  askAI
-);
+router.post("/ask", protect, askAI);
+router.post("/chat", protect, chatAssistant);
 
 router.post(
   "/task-description",
@@ -28,33 +36,61 @@ router.post(
 );
 
 router.post(
+  "/generate-description",
+  protect,
+  generateTaskDescription
+);
+
+router.post(
+  "/task-suggestions",
+  protect,
+  generateTaskSuggestions
+);
+
+router.post(
   "/project-summary",
+  protect,
+  projectSummary
+);
+
+router.post(
+  "/summarize-project",
   protect,
   summarizeProject
 );
 
-router.post(
-  "/priority",
-  protect,
-  suggestPriority
-);
+router.post("/priority", protect, suggestPriority);
+router.post("/estimate-time", protect, estimateTime);
+router.post("/improve-comment", protect, improveComment);
+router.post("/weekly-report", protect, generateWeeklyReport);
 
+router.post("/sprint-planning", protect, sprintPlanning);
+router.post("/risk-detection", protect, riskDetection);
 router.post(
-  "/estimate-time",
+  "/workload-balancing",
   protect,
-  estimateTime
+  workloadBalancing
 );
-
 router.post(
-  "/improve-comment",
+  "/task-prioritization",
   protect,
-  improveComment
+  taskPrioritization
 );
-
 router.post(
-  "/weekly-report",
+  "/deadline-prediction",
   protect,
-  generateWeeklyReport
+  deadlinePrediction
+);
+router.post("/meeting-notes", protect, meetingNotes);
+router.post(
+  "/natural-language-task",
+  protect,
+  naturalLanguageTask
+);
+router.post(
+  "/productivity-insights",
+  protect,
+  productivityInsights
 );
 
 module.exports = router;

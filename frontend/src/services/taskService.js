@@ -2,7 +2,7 @@ import api from "../api/axios";
 
 export const getTasks = async (projectId) => {
   const { data } = await api.get(
-    `/tasks/project/${projectId}`
+    `/tasks?project=${projectId}`
   );
 
   return data;
@@ -41,21 +41,45 @@ export const deleteTask = async (
 
 export const updateTaskStatus = async (
   taskId,
-  status
+  status,
+  columnId
 ) => {
-  const { data } = await api.patch(
+  const payload = { status };
+
+  if (columnId) {
+    payload.columnId = columnId;
+  }
+
+  const { data } = await api.put(
     `/tasks/${taskId}/move`,
-    {
-      status,
-    }
+    payload
   );
 
   return data;
 };
+
+export const watchTask = async (taskId) => {
+  const { data } = await api.put(
+    `/tasks/${taskId}/watch`
+  );
+
+  return data;
+};
+
+export const unwatchTask = async (taskId) => {
+  const { data } = await api.delete(
+    `/tasks/${taskId}/watch`
+  );
+
+  return data;
+};
+
 export default {
   getTasks,
   createTask,
   updateTask,
   deleteTask,
   updateTaskStatus,
+  watchTask,
+  unwatchTask,
 };

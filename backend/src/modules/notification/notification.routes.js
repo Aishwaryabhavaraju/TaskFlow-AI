@@ -10,12 +10,33 @@ const {
   markAsRead,
   markAllAsRead,
   deleteNotification,
+  getPreferences,
+  updatePreferences,
+  sendDailyDigest,
 } = require("./notification.controller");
 
 router.get(
   "/",
   protect,
   getNotifications
+);
+
+router.get(
+  "/preferences",
+  protect,
+  getPreferences
+);
+
+router.put(
+  "/preferences",
+  protect,
+  updatePreferences
+);
+
+router.post(
+  "/digest",
+  protect,
+  sendDailyDigest
 );
 
 router.put(
