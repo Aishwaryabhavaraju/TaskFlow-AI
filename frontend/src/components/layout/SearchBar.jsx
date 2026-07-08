@@ -2,10 +2,9 @@ import { Search } from "lucide-react";
 
 export default function SearchBar() {
   return (
-    <div
+    <span
       className="
-      hidden
-      md:flex
+      flex
 
       items-center
 
@@ -25,7 +24,8 @@ export default function SearchBar() {
 
       py-2
 
-      w-96
+      w-72
+      lg:w-96
       "
     >
       <Search
@@ -33,19 +33,21 @@ export default function SearchBar() {
         className="text-zinc-500"
       />
 
-      <input
-        type="text"
-        placeholder="Search projects, tasks..."
+      <span
         className="
         flex-1
-        bg-transparent
-        outline-none
         text-sm
+        text-left
+        text-zinc-500
         "
-      />
+      >
+        Search projects, tasks...
+      </span>
 
       <kbd
         className="
+        hidden
+        lg:inline-flex
         rounded
         bg-zinc-200
         dark:bg-zinc-700
@@ -59,6 +61,6 @@ export default function SearchBar() {
       >
         Ctrl K
       </kbd>
-    </div>
+    </span>
   );
 }

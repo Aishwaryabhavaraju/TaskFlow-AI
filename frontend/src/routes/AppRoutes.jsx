@@ -1,152 +1,176 @@
+import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Login from "../pages/auth/Login";
-import Dashboard from "../pages/dashboard/Dashboard";
+import AppLoader from "../components/common/AppLoader";
 
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 
-import Register from "../pages/auth/Register";
-import ForgotPassword from "../pages/auth/ForgotPassword";
-import ResetPassword from "../pages/auth/ResetPassword";
+const Login = lazy(() => import("../pages/auth/Login"));
+const Register = lazy(() => import("../pages/auth/Register"));
+const ForgotPassword = lazy(() => import("../pages/auth/ForgotPassword"));
+const ResetPassword = lazy(() => import("../pages/auth/ResetPassword"));
 
-import Appearance from "../pages/settings/Appearance";
+const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
+const Appearance = lazy(() => import("../pages/settings/Appearance"));
+const SettingsAdministration = lazy(() =>
+  import("../pages/settings/SettingsAdministration")
+);
 
-import WorkspaceHome from "../pages/workspace/WorkspaceHome";
-import WorkspaceDashboard from "../pages/workspace/WorkspaceDashboard";
-import WorkspaceDetails from "../pages/workspace/WorkspaceDetails";
-import WorkspaceMembersPage from "../pages/workspace/WorkspaceMembersPage";
-import WorkspaceSettings from "../pages/workspace/WorkspaceSettings";
+const WorkspaceHome = lazy(() => import("../pages/workspace/WorkspaceHome"));
+const WorkspaceDashboard = lazy(() =>
+  import("../pages/workspace/WorkspaceDashboard")
+);
+const WorkspaceDetails = lazy(() =>
+  import("../pages/workspace/WorkspaceDetails")
+);
+const WorkspaceMembersPage = lazy(() =>
+  import("../pages/workspace/WorkspaceMembersPage")
+);
+const WorkspaceSettings = lazy(() =>
+  import("../pages/workspace/WorkspaceSettings")
+);
 
-import ProjectsHome from "../pages/project/ProjectsHome";
-import ProjectDetails from "../pages/project/ProjectDetails";
-import ProjectSettings from "../pages/project/ProjectSettings";
-import ProjectAnalytics from "../pages/analytics/ProjectAnalytics";
+const ProjectsHome = lazy(() => import("../pages/project/ProjectsHome"));
+const ProjectDetails = lazy(() => import("../pages/project/ProjectDetails"));
+const ProjectSettings = lazy(() => import("../pages/project/ProjectSettings"));
+const ProjectAnalytics = lazy(() =>
+  import("../pages/analytics/ProjectAnalytics")
+);
+const TaskBoard = lazy(() => import("../pages/task/TaskBoard"));
+const AIAssistantPage = lazy(() => import("../pages/ai/AIAssistantPage"));
+const NotFound = lazy(() => import("../pages/errors/NotFound"));
+const Offline = lazy(() => import("../pages/errors/Offline"));
 
-import TaskBoard from "../pages/task/TaskBoard";
-import AIAssistantPage from "../pages/ai/AIAssistantPage";
+const privatePage = (component) => (
+  <PrivateRoute>{component}</PrivateRoute>
+);
 
 export default function AppRoutes() {
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={<Navigate to="/login" replace />}
-      />
+    <Suspense fallback={<AppLoader />}>
+      <Routes>
+        <Route
+          path="/"
+          element={<Navigate to="/login" replace />}
+        />
 
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
-        }
-      />
-
-      <Route
-        path="/dashboard"
-        element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="*"
-        element={<Navigate to="/login" replace />}
-      />
-
-      <Route
-        path="/register"
-        element={
+        <Route
+          path="/login"
+          element={
             <PublicRoute>
-            <Register />
+              <Login />
             </PublicRoute>
-        }
-       />
-
-       <Route
-            path="/forgot-password"
-            element={
-                <PublicRoute>
-                    <ForgotPassword />
-                </PublicRoute>
-            }
+          }
         />
 
         <Route
-            path="/reset-password/:token"
-            element={
-                <PublicRoute>
-                    <ResetPassword />
-                </PublicRoute>
-            }
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
         />
 
         <Route
-            path="/settings/appearance"
-            element={<Appearance />}
+          path="/forgot-password"
+          element={
+            <PublicRoute>
+              <ForgotPassword />
+            </PublicRoute>
+          }
         />
 
         <Route
-            path="/workspaces"
-            element={<WorkspaceHome />}
+          path="/reset-password/:token"
+          element={
+            <PublicRoute>
+              <ResetPassword />
+            </PublicRoute>
+          }
         />
-        
+
+        <Route
+          path="/dashboard"
+          element={privatePage(<Dashboard />)}
+        />
+
+        <Route
+          path="/settings/appearance"
+          element={privatePage(<Appearance />)}
+        />
+
+        <Route
+          path="/settings"
+          element={privatePage(<SettingsAdministration />)}
+        />
+
+        <Route
+          path="/workspaces"
+          element={privatePage(<WorkspaceHome />)}
+        />
+
         <Route
           path="/workspaces/:workspaceId"
-          element={<WorkspaceDashboard />}
+          element={privatePage(<WorkspaceDashboard />)}
         />
 
         <Route
           path="/workspaces/:workspaceId/details"
-          element={<WorkspaceDetails />}
+          element={privatePage(<WorkspaceDetails />)}
         />
 
         <Route
           path="/workspaces/:workspaceId/members"
-          element={<WorkspaceMembersPage />}
+          element={privatePage(<WorkspaceMembersPage />)}
         />
 
         <Route
-            path="/workspaces/:workspaceId/settings"
-            element={<WorkspaceSettings />}
+          path="/workspaces/:workspaceId/settings"
+          element={privatePage(<WorkspaceSettings />)}
         />
 
         <Route
-            path="/workspaces/:workspaceId/projects"
-            element={<ProjectsHome />}
+          path="/workspaces/:workspaceId/projects"
+          element={privatePage(<ProjectsHome />)}
         />
 
         <Route
           path="/projects/:projectId"
-          element={<ProjectDetails />}
+          element={privatePage(<ProjectDetails />)}
         />
 
         <Route
           path="/projects/:projectId/settings"
-          element={<ProjectSettings />}
+          element={privatePage(<ProjectSettings />)}
         />
 
         <Route
           path="/projects/:projectId/analytics"
-          element={<ProjectAnalytics />}
+          element={privatePage(<ProjectAnalytics />)}
         />
 
         <Route
           path="/projects/:projectId/tasks"
-          element={<TaskBoard />}
+          element={privatePage(<TaskBoard />)}
         />
 
         <Route
           path="/ai"
-          element={
-            <PrivateRoute>
-              <AIAssistantPage />
-            </PrivateRoute>
-          }
+          element={privatePage(<AIAssistantPage />)}
         />
-    </Routes>
+
+        <Route
+          path="/offline"
+          element={privatePage(<Offline />)}
+        />
+
+        <Route
+          path="*"
+          element={privatePage(<NotFound />)}
+        />
+      </Routes>
+    </Suspense>
   );
 }

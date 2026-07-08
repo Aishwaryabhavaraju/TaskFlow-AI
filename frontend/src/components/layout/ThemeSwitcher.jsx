@@ -30,6 +30,8 @@ export default function ThemeSwitcher() {
     <button
       onClick={nextTheme}
       title={`Current theme: ${theme}`}
+      type="button"
+      aria-label={`Switch theme. Current theme is ${theme}`}
       className="
       rounded-xl
       p-3

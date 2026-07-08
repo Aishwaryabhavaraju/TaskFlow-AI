@@ -12,6 +12,11 @@ export default function Avatar({
 
   return (
     <div
+      aria-label={
+        user?.firstName
+          ? `${user.firstName} ${user?.lastName || ""}`
+          : "User avatar"
+      }
       className={`
         ${sizes[size]}
         rounded-full

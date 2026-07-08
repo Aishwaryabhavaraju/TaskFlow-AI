@@ -4,6 +4,7 @@ export default function EmptyState({
   title,
   description,
   button,
+  icon: Icon = Inbox,
 }) {
   return (
     <div
@@ -12,7 +13,7 @@ export default function EmptyState({
       flex-col
       items-center
       justify-center
-      rounded-2xl
+      rounded-lg
       border-2
       border-dashed
       border-zinc-300
@@ -27,23 +28,23 @@ export default function EmptyState({
       <div
         className="
         mb-6
-        rounded-full
+        rounded-lg
         bg-yellow-100
         p-5
         dark:bg-yellow-900/20
         "
       >
-        <Inbox
+        <Icon
           size={42}
           className="text-yellow-500"
         />
       </div>
 
-      <h2 className="text-2xl font-semibold">
+      <h2 className="text-balance text-2xl font-semibold">
         {title}
       </h2>
 
-      <p className="mt-3 max-w-md text-zinc-500">
+      <p className="mt-3 max-w-md text-pretty text-zinc-500">
         {description}
       </p>
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import {
@@ -75,7 +76,9 @@ export default function UserMenu() {
           z-50
           "
         >
-          <button
+          <Link
+            to="/settings#profile"
+            onClick={() => setOpen(false)}
             className="
             flex
             w-full
@@ -90,9 +93,11 @@ export default function UserMenu() {
             <User size={18} />
 
             Profile
-          </button>
+          </Link>
 
-          <button
+          <Link
+            to="/settings"
+            onClick={() => setOpen(false)}
             className="
             flex
             w-full
@@ -107,7 +112,7 @@ export default function UserMenu() {
             <Settings size={18} />
 
             Settings
-          </button>
+          </Link>
 
           <button
             onClick={logout}

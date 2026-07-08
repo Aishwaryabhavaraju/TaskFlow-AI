@@ -8,8 +8,17 @@ export const ThemeProvider = ({ children }) => {
   );
 
   useEffect(() => {
+    const systemTheme = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches
+      ? "dark"
+      : "light";
+
+    const resolvedTheme =
+      theme === "system" ? systemTheme : theme;
+
     document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(theme);
+    document.documentElement.classList.add(resolvedTheme);
 
     localStorage.setItem("theme", theme);
   }, [theme]);
@@ -22,6 +31,7 @@ export const ThemeProvider = ({ children }) => {
     <ThemeContext.Provider
       value={{
         theme,
+        setTheme,
         toggleTheme,
       }}
     >

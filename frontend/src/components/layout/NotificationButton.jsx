@@ -20,6 +20,9 @@ export default function NotificationButton() {
 
       <button
         onClick={() => setOpen(!open)}
+        type="button"
+        aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}`}
+        aria-expanded={open}
         className="
         relative
         rounded-xl
