@@ -23,35 +23,76 @@ const app = express();
 
 // Enable CORS first (before helmet to prevent header conflicts)
 const allowedOrigins = [
-  process.env.CLIENT_URL,
   "https://task-flow-ai-yww3.vercel.app",
+  "https://task-flow-ai-yww3-git-main-baak.vercel.app",
+  "https://task-flow-ai-yww3-*.vercel.app",
+  process.env.CLIENT_URL || "http://localhost:5173",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
   "http://[::1]:5173",
 ].filter(Boolean);
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
+// CORS configuration
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin matches any allowed origin (with wildcard support)
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (allowedOrigin.includes("*")) {
+        const pattern = allowedOrigin.replace(/\*/g, ".*");
+        return new RegExp(pattern).test(origin);
       }
+      return allowedOrigin === origin;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS rejected origin: ${origin}`);
+      callback(new Error("CORS not allowed"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  exposedHeaders: ["X-Total-Count", "X-Page-Number"],
+  maxAge: 3600,
+  preflightContinue: false,
+};
 
-      return callback(
-        new Error(
-          `CORS policy does not allow access from origin ${origin}`
-        )
-      );
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+app.use(cors(corsOptions));
+
+// Add explicit CORS headers as fallback
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  if (origin) {
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (allowedOrigin.includes("*")) {
+        const pattern = allowedOrigin.replace(/\*/g, ".*");
+        return new RegExp(pattern).test(origin);
+      }
+      return allowedOrigin === origin;
+    });
+    
+    if (isAllowed) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+    }
+  }
+  
+  next();
+});
+
+// Handle preflight requests explicitly
+app.options("*", cors(corsOptions));
 
 // Security
 app.use(helmet({
   crossOriginResourcePolicy: false,
+  contentSecurityPolicy: false,
 }));
 
 // Parse JSON

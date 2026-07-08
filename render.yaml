@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: taskflow-ai-backend
+    runtime: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_URL
+        value: https://task-flow-ai-yww3.vercel.app
+      - key: PORT
+        value: 5000
