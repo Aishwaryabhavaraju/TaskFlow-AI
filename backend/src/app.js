@@ -27,10 +27,11 @@ app.use(helmet());
 // Enable CORS
 const allowedOrigins = [
   process.env.CLIENT_URL,
+  "https://task-flow-ai-yww3.vercel.app",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
   "http://[::1]:5173",
-];
+].filter(Boolean);
 
 app.use(
   cors({
@@ -46,6 +47,8 @@ app.use(
       );
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
