@@ -21,10 +21,7 @@ const calendarRoutes = require("./modules/calendar/calendar.routes");
 
 const app = express();
 
-// Security
-app.use(helmet());
-
-// Enable CORS
+// Enable CORS first (before helmet to prevent header conflicts)
 const allowedOrigins = [
   process.env.CLIENT_URL,
   "https://task-flow-ai-yww3.vercel.app",
@@ -51,6 +48,11 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Security
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+}));
 
 // Parse JSON
 app.use(express.json());
