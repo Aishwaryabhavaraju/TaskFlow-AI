@@ -86,9 +86,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Handle preflight requests explicitly
-app.options("*", cors(corsOptions));
-
 // Security
 app.use(helmet({
   crossOriginResourcePolicy: false,
