@@ -34,11 +34,23 @@ const inviteMember = async (
   senderId,
   email
 ) => {
-
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new Error("User not found");
+    throw new Error("User with this email not found");
+  }
+
+  const team = await Team.findById(teamId);
+  if (!team) {
+    throw new Error("Team not found");
+  }
+
+  const isMember = team.members.some(
+    (m) => m.user.toString() === user._id.toString()
+  );
+
+  if (isMember) {
+    throw new Error("User is already a member of this team");
   }
 
   const existingInvite =
@@ -50,7 +62,7 @@ const inviteMember = async (
 
   if (existingInvite) {
     throw new Error(
-      "Invitation already exists"
+      "Invitation already sent to this user"
     );
   }
 
@@ -59,7 +71,6 @@ const inviteMember = async (
     sender: senderId,
     receiver: user._id,
   });
-
 };
 
 const acceptInvitation = async (

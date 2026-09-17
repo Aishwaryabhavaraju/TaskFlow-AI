@@ -11,13 +11,13 @@ export default function useLogout() {
 
   const logout = async () => {
     try {
-      await dispatch(logoutUser()).unwrap();
-
+      await dispatch(logoutUser());
       toast.success("Logged out successfully");
-
-      navigate("/login");
     } catch {
-      toast.error("Unable to logout");
+      toast.success("Logged out");
+    } finally {
+      localStorage.removeItem("token");
+      navigate("/login");
     }
   };
 

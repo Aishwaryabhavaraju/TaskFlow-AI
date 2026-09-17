@@ -18,6 +18,7 @@ const dashboardRoutes = require("./modules/dashboard/dashboard.routes");
 const aiRoutes = require("./modules/ai/ai.routes");
 const analyticsRoutes = require("./modules/analytics/analytics.routes");
 const calendarRoutes = require("./modules/calendar/calendar.routes");
+const workspaceRoutes = require("./modules/workspace/workspace.routes");
 
 const app = express();
 
@@ -120,6 +121,7 @@ app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/ai", aiRoutes);
 app.use("/api/v1/analytics", analyticsRoutes);
 app.use("/api/v1/calendar", calendarRoutes);
+app.use("/api/v1/workspaces", workspaceRoutes);
 
 // Health Check Route
 app.get("/", (req, res) => {

@@ -74,14 +74,11 @@ exports.register = async (req, res) => {
       },
     });
   } catch (error) {
-  console.error("REGISTER ERROR:", error);
-
-  res.status(500).json({
-    success: false,
-    message: error.message,
-    stack: error.stack,
-  });
-}
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 /**
@@ -103,12 +100,12 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     // Find user
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email ? email.toLowerCase() : "" });
 
     if (!user) {
-      return res.status(401).json({
+      return res.status(404).json({
         success: false,
-        message: "Invalid email or password",
+        message: "You don't have an account. Please register first.",
       });
     }
 
@@ -118,7 +115,7 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: "Invalid email or password",
+        message: "Invalid email or password.",
       });
     }
 
@@ -251,6 +248,8 @@ exports.resetPassword = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
+  res.clearCookie("token");
+  res.clearCookie("jwt");
   res.status(200).json({
     success: true,
     message: "Logged out successfully",

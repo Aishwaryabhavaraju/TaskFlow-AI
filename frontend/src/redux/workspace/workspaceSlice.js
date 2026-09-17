@@ -1,8 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const getStoredWorkspace = () => {
+  try {
+    const item = localStorage.getItem("taskflow_current_workspace");
+    return item ? JSON.parse(item) : null;
+  } catch {
+    return null;
+  }
+};
+
 const initialState = {
   workspaces: [],
-  currentWorkspace: null,
+  currentWorkspace: getStoredWorkspace(),
   loading: false,
   error: null,
 };
@@ -19,10 +28,19 @@ const workspaceSlice = createSlice({
 
     setWorkspaces(state, action) {
       state.workspaces = action.payload;
+      if (!state.currentWorkspace && action.payload?.length > 0) {
+        state.currentWorkspace = action.payload[0];
+        localStorage.setItem("taskflow_current_workspace", JSON.stringify(action.payload[0]));
+      }
     },
 
     setCurrentWorkspace(state, action) {
       state.currentWorkspace = action.payload;
+      if (action.payload) {
+        localStorage.setItem("taskflow_current_workspace", JSON.stringify(action.payload));
+      } else {
+        localStorage.removeItem("taskflow_current_workspace");
+      }
     },
 
     setError(state, action) {

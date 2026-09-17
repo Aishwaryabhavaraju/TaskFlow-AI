@@ -9,11 +9,15 @@ import WorkspaceActivity from "../../components/workspace/WorkspaceActivity";
 import WorkspaceAIInsights from "../../components/workspace/WorkspaceAIInsights";
 import QuickActions from "../../components/workspace/QuickActions";
 
+import useWorkspace from "../../hooks/useWorkspace";
+
 export default function WorkspaceDashboard() {
+  const { currentWorkspace } = useWorkspace();
+
   return (
     <DashboardLayout>
       <PageHeader
-        title="Development Workspace"
+        title={currentWorkspace?.name || "Development Workspace"}
         description="Overview of your workspace activity and productivity."
       />
 

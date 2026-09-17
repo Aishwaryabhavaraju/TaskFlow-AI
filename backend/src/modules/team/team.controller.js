@@ -51,16 +51,11 @@ exports.getTeam = async (req, res) => {
 };
 
 exports.inviteMember = async (req, res) => {
-
-  const invitation =
-    await teamService.inviteMember(
-
+  try {
+    const invitation = await teamService.inviteMember(
       req.params.id,
-
       req.user._id,
-
       req.body.email
-
     );
 
     await notificationService.createNotification({
@@ -71,12 +66,18 @@ exports.inviteMember = async (req, res) => {
       message: `${req.user.firstName} invited you to join the team.`,
       team: invitation.team,
     });
-  res.status(201).json({
-    success: true,
-    message: "Invitation sent successfully",
-    data: invitation,
-  });
 
+    res.status(201).json({
+      success: true,
+      message: "Invitation sent successfully",
+      data: invitation,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 exports.acceptInvitation =

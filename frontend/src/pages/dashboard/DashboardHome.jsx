@@ -29,32 +29,24 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useCalendar from "../../hooks/useCalendar";
-import { setTasks } from "../../redux/slices/taskSlice";
-import calendarService from "../../services/calendarService";
+import useTask from "../../hooks/useTask";
+import useProject from "../../hooks/useProject";
 
 export default function DashboardHome() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { fetchEvents } = useCalendar();
+  const { fetchTasks } = useTask();
+  const { fetchProjects } = useProject();
 
   const tasks = useSelector((state) => state.tasks.tasks) || [];
   const events = useSelector((state) => state.calendar.events) || [];
 
   useEffect(() => {
-    const loadDashboardData = async () => {
-      try {
-        const data = await calendarService.getCalendarEvents();
-        if (data && data.tasks) {
-          dispatch(setTasks(data.tasks));
-        }
-      } catch (err) {
-        console.error("Failed to load dashboard tasks", err);
-      }
-    };
-
-    loadDashboardData();
+    fetchTasks();
+    fetchProjects();
     fetchEvents();
-  }, [dispatch, fetchEvents]);
+  }, []);
 
   const todayTasks = getTodayTasks(tasks);
   const upcomingTasks = getUpcomingTasks(tasks);

@@ -8,8 +8,7 @@ exports.createProjectValidation = [
     .withMessage("Project name is required"),
 
   body("team")
-    .notEmpty()
-    .withMessage("Team ID is required"),
+    .optional(),
 
   body("priority")
     .optional()

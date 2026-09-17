@@ -77,7 +77,7 @@ export default function CreateProjectForm({
         onChange={(file) => update("coverImage", file)}
       />
 
-      <Button className="w-full">
+      <Button type="submit" className="w-full">
         Create Project
       </Button>
 

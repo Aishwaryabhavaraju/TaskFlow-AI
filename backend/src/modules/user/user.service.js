@@ -73,9 +73,66 @@ const searchUsers = async (query) => {
 
 };
 
+const getApiKeys = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) return [];
+  return (user.apiKeys || []).map((item) => ({
+    _id: item._id,
+    provider: item.provider,
+    model: item.model,
+    key: item.key ? item.key.slice(0, 7) + "************" + item.key.slice(-4) : "Not configured",
+    status: item.status || "Connected",
+    createdAt: item.createdAt,
+  }));
+};
+
+const saveApiKey = async (userId, { provider, model, key }) => {
+  const user = await User.findById(userId);
+  if (!user) throw new Error("User not found");
+
+  if (!user.apiKeys) user.apiKeys = [];
+
+  const existingIndex = user.apiKeys.findIndex(
+    (k) => k.provider.toLowerCase() === provider.toLowerCase()
+  );
+
+  if (existingIndex >= 0) {
+    user.apiKeys[existingIndex].key = key;
+    user.apiKeys[existingIndex].model = model || user.apiKeys[existingIndex].model;
+    user.apiKeys[existingIndex].status = "Connected";
+  } else {
+    user.apiKeys.push({
+      provider,
+      model: model || "",
+      key,
+      status: "Connected",
+    });
+  }
+
+  await user.save();
+  return getApiKeys(userId);
+};
+
+const deleteApiKey = async (userId, provider) => {
+  const user = await User.findById(userId);
+  if (!user) throw new Error("User not found");
+
+  if (user.apiKeys) {
+    user.apiKeys = user.apiKeys.filter(
+      (k) => k.provider.toLowerCase() !== provider.toLowerCase()
+    );
+    await user.save();
+  }
+
+  return getApiKeys(userId);
+};
+
 module.exports = {
     getProfile,
     updateProfile,
     uploadProfilePicture,
     searchUsers,
+    getApiKeys,
+    saveApiKey,
+    deleteApiKey,
 };

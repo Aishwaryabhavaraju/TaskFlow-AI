@@ -17,8 +17,12 @@ const PRIORITIES = [
   "Critical",
 ];
 
-const toObjectId = (id) =>
-  new mongoose.Types.ObjectId(id);
+const toObjectId = (id) => {
+  if (!id) return null;
+  if (id instanceof mongoose.Types.ObjectId) return id;
+  if (mongoose.Types.ObjectId.isValid(id)) return new mongoose.Types.ObjectId(id);
+  return null;
+};
 
 const startOfDay = (date) => {
   const value = new Date(date);

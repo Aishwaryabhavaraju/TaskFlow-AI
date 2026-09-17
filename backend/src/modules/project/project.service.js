@@ -2,7 +2,15 @@ const Project = require("../../models/Project");
 const Board = require("../../models/Board");
 
 const createProject = async (data) => {
-  const project = await Project.create(data);
+  const membersList = Array.isArray(data.members) ? [...data.members] : [];
+  if (data.owner && !membersList.some(id => id.toString() === data.owner.toString())) {
+    membersList.push(data.owner);
+  }
+
+  const project = await Project.create({
+    ...data,
+    members: membersList,
+  });
 
   await Board.create({
     name: `${project.name} Board`,
@@ -48,7 +56,7 @@ const createProject = async (data) => {
 
 const getProjects = async (userId) => {
   return await Project.find({
-    members: userId,
+    $or: [{ owner: userId }, { members: userId }],
     isDeleted: false,
   })
     .populate("team", "name")

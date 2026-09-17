@@ -67,18 +67,21 @@ export default function RegisterForm() {
 
       <Input
         label="First Name"
+        autoComplete="given-name"
         error={errors.firstName?.message}
         {...register("firstName")}
       />
 
       <Input
         label="Last Name"
+        autoComplete="family-name"
         error={errors.lastName?.message}
         {...register("lastName")}
       />
 
       <Input
         label="Username"
+        autoComplete="username"
         error={errors.username?.message}
         {...register("username")}
       />
@@ -86,18 +89,21 @@ export default function RegisterForm() {
       <Input
         label="Email"
         type="email"
+        autoComplete="email"
         error={errors.email?.message}
         {...register("email")}
       />
 
       <PasswordInput
         label="Password"
+        autoComplete="new-password"
         error={errors.password?.message}
         {...register("password")}
       />
 
       <PasswordInput
         label="Confirm Password"
+        autoComplete="new-password"
         error={errors.confirmPassword?.message}
         {...register("confirmPassword")}
       />

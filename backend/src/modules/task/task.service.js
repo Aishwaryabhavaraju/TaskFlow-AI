@@ -25,12 +25,11 @@ const createTask = async (data) => {
 };
 
 const getTasks = async (projectId) => {
-  return await populateTask(
-    Task.find({
-      project: projectId,
-      isDeleted: false,
-    })
-  );
+  const query = { isDeleted: false };
+  if (projectId) {
+    query.project = projectId;
+  }
+  return await populateTask(Task.find(query));
 };
 
 const getTask = async (id) => {

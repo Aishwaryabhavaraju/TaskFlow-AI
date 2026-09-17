@@ -5,6 +5,7 @@ import {
   CalendarClock,
   ClipboardList,
   Gauge,
+  Info,
   MessageSquare,
   Milestone,
   Route,
@@ -15,6 +16,9 @@ import {
 import DashboardLayout from "../../layouts/DashboardLayout";
 import PageHeader from "../../components/layout/PageHeader";
 import aiService from "../../services/aiService";
+import useProject from "../../hooks/useProject";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 const features = [
   {
@@ -23,6 +27,8 @@ const features = [
     icon: Milestone,
     action: "Build Sprint Plan",
     placeholder: "Sprint goal, team capacity, constraints...",
+    description: "Generates optimal sprint scope, milestone breakdown, and story point allocation based on capacity and sprint goals.",
+    signals: "Analyzes open tasks, team capacity, and priority levels.",
   },
   {
     id: "risk-detection",
@@ -30,6 +36,8 @@ const features = [
     icon: Gauge,
     action: "Detect Risks",
     placeholder: "Known risks, blockers, scope concerns...",
+    description: "Identifies scope creep, dependency bottlenecks, unassigned high-priority work, and impending deadline risks.",
+    signals: "Scans project due dates, unassigned tasks, and blocker notes.",
   },
   {
     id: "workload-balancing",
@@ -37,6 +45,8 @@ const features = [
     icon: Scale,
     action: "Balance Workload",
     placeholder: "Capacity notes, unavailable team members...",
+    description: "Evaluates team member task assignments to detect overload and suggest smart reassignments.",
+    signals: "Evaluates assigned task counts and available capacity hours.",
   },
   {
     id: "task-prioritization",
@@ -44,6 +54,8 @@ const features = [
     icon: Route,
     action: "Prioritize Tasks",
     placeholder: "Focus areas, deadlines, customer impact...",
+    description: "Ranks open tasks by business impact, urgency, dependency order, and upcoming target dates.",
+    signals: "Sorts task priorities, status stages, and deadline urgency.",
   },
   {
     id: "deadline-prediction",
@@ -51,6 +63,8 @@ const features = [
     icon: CalendarClock,
     action: "Predict Deadline",
     placeholder: "Daily capacity, target date, delivery assumptions...",
+    description: "Predicts realistic completion dates based on historical velocity and daily available capacity hours.",
+    signals: "Calculates total remaining task estimates against daily capacity.",
   },
   {
     id: "meeting-notes",
@@ -58,6 +72,8 @@ const features = [
     icon: ClipboardList,
     action: "Generate Notes",
     placeholder: "Paste meeting transcript or raw notes...",
+    description: "Transforms raw meeting notes or transcripts into structured action items, owners, and follow-ups.",
+    signals: "Parses text transcripts for action items and mentions.",
   },
   {
     id: "project-summary",
@@ -65,6 +81,8 @@ const features = [
     icon: Brain,
     action: "Summarize Project",
     placeholder: "Audience, tone, areas to emphasize...",
+    description: "Generates an executive progress summary highlighting recent completions, blockers, and next milestones.",
+    signals: "Summarizes active board columns and task completion rates.",
   },
   {
     id: "chat",
@@ -72,6 +90,8 @@ const features = [
     icon: MessageSquare,
     action: "Ask Assistant",
     placeholder: "Ask a project question...",
+    description: "Interactive AI co-pilot that answers natural language questions about your workspace and project tasks.",
+    signals: "Answers using overall workspace and project context.",
   },
   {
     id: "natural-language-task",
@@ -79,6 +99,8 @@ const features = [
     icon: Wand2,
     action: "Create Draft",
     placeholder: "Create a high priority task to review onboarding copy tomorrow...",
+    description: "Converts plain text descriptions into structured tasks with titles, priorities, and assigned boards.",
+    signals: "Extracts title, priority, due date, and descriptions automatically.",
   },
   {
     id: "productivity-insights",
@@ -86,6 +108,8 @@ const features = [
     icon: Sparkles,
     action: "Generate Insights",
     placeholder: "What should the insight focus on?",
+    description: "Analyzes throughput trends and highlights bottlenecks to help optimize overall team velocity.",
+    signals: "Analyzes completed vs pending task velocity across boards.",
   },
 ];
 
@@ -140,6 +164,7 @@ const RenderValue = ({ value }) => {
 };
 
 export default function AIAssistantPage() {
+  const { projects = [], fetchProjects } = useProject();
   const [activeFeature, setActiveFeature] =
     useState(features[0].id);
   const [projectId, setProjectId] = useState("");
@@ -155,6 +180,10 @@ export default function AIAssistantPage() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
   const feature = useMemo(
     () =>
@@ -259,19 +288,37 @@ export default function AIAssistantPage() {
               </div>
             </div>
 
+            <div className="mb-5 rounded-lg border border-yellow-400/30 bg-yellow-400/10 p-4 text-sm text-zinc-800 dark:text-zinc-200">
+              <div className="flex items-start gap-2.5">
+                <Info size={18} className="mt-0.5 shrink-0 text-yellow-600 dark:text-yellow-400" />
+                <div>
+                  <p className="font-semibold text-zinc-900 dark:text-zinc-100">{feature.description}</p>
+                  <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
+                    <span className="font-medium">Context Signals:</span> {feature.signals}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="grid gap-4 md:grid-cols-2">
               <label className="space-y-2">
                 <span className="text-sm font-medium">
-                  Project ID
+                  Project
                 </span>
-                <input
+                <select
                   value={projectId}
                   onChange={(event) =>
                     setProjectId(event.target.value)
                   }
-                  placeholder="Optional for global analysis"
-                  className="w-full rounded-lg border border-zinc-200 bg-transparent px-3 py-2 text-sm dark:border-zinc-700"
-                />
+                  className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-yellow-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+                >
+                  <option value="">All Projects (Global Analysis)</option>
+                  {projects.map((p) => (
+                    <option key={p._id} value={p._id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label className="space-y-2">

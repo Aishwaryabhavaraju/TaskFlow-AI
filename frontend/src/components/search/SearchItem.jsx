@@ -1,44 +1,19 @@
-export default function SearchItem({
-  item,
-}) {
+export default function SearchItem({ item, onSelect }) {
   return (
     <button
-      className="
-      w-full
-      rounded-xl
-      p-4
-      text-left
-      transition
-      hover:bg-zinc-100
-      dark:hover:bg-zinc-800
-      "
+      type="button"
+      onClick={() => onSelect && onSelect(item)}
+      className="flex w-full items-center justify-between rounded-xl p-3.5 text-left transition hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
     >
-      <div className="font-semibold">
-
-        {item.title}
-
+      <div>
+        <div className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
+          {item.title}
+        </div>
+        <div className="text-xs text-zinc-500 dark:text-zinc-400">
+          {item.description}
+        </div>
       </div>
-
-      <div className="text-sm text-zinc-500">
-
-        {item.description}
-
-      </div>
-
-      <span
-        className="
-        mt-2
-        inline-block
-        rounded-full
-        bg-yellow-100
-        px-2
-        py-1
-        text-xs
-        text-yellow-700
-        dark:bg-yellow-900
-        dark:text-yellow-300
-        "
-      >
+      <span className="rounded-full bg-yellow-400/20 px-2.5 py-0.5 text-xs font-semibold text-yellow-700 dark:text-yellow-300 shrink-0">
         {item.type}
       </span>
     </button>

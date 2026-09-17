@@ -1,3 +1,12 @@
+const formatDueDate = (dateString) => {
+  if (!dateString) return "Today";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString;
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) !== "12:00 AM"
+    ? date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    : "Due Today";
+};
+
 export default function TodayTasksWidget({
   tasks,
 }) {
@@ -22,8 +31,8 @@ export default function TodayTasksWidget({
                 {task.title}
               </h3>
 
-              <p className="text-sm text-zinc-500">
-                {task.dueDate}
+              <p className="mt-1 text-xs text-zinc-500">
+                {formatDueDate(task.dueDate)}
               </p>
             </div>
           ))}

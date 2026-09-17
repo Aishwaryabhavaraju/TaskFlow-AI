@@ -18,11 +18,17 @@ const taskSlice = createSlice({
     },
 
     setTasks(state, action) {
-      state.tasks = action.payload;
+      state.tasks = Array.isArray(action.payload) ? action.payload : [];
     },
 
     addTask(state, action) {
-      state.tasks.unshift(action.payload);
+      if (action.payload && action.payload._id) {
+        if (!Array.isArray(state.tasks)) state.tasks = [];
+        const exists = state.tasks.some(t => t._id === action.payload._id);
+        if (!exists) {
+          state.tasks.unshift(action.payload);
+        }
+      }
     },
 
     updateTask(state, action) {

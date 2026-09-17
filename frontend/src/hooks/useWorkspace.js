@@ -72,23 +72,25 @@ export default function useWorkspace() {
     dispatch(setLoading(true));
 
     const data = await createWorkspace(formData);
+    const newWorkspace = data?.data || data;
 
-    dispatch(
-      setWorkspaces([
-        ...workspace.workspaces,
-        data,
-      ])
-    );
+    if (newWorkspace && newWorkspace._id) {
+      const currentList = Array.isArray(workspace.workspaces) ? workspace.workspaces : [];
+      dispatch(setWorkspaces([...currentList, newWorkspace]));
+      dispatch(setCurrentWorkspace(newWorkspace));
+    }
 
     return {
       success: true,
+      workspace: newWorkspace,
     };
   } catch (error) {
-    dispatch(setError(error.message));
+    const errorMsg = error.response?.data?.message || error.message || "Unable to create workspace.";
+    dispatch(setError(errorMsg));
 
     return {
       success: false,
-      message: error.message,
+      message: errorMsg,
     };
   } finally {
     dispatch(setLoading(false));
@@ -293,12 +295,37 @@ const fetchSettings = async (workspaceId) => {
 
 const saveSettings = async (
     workspaceId,
-    settings
+    settingsData
 ) => {
-    return await updateWorkspaceSettings(
-        workspaceId,
-        settings
-    );
+    try {
+      dispatch(setLoading(true));
+      const data = await updateWorkspaceSettings(
+          workspaceId,
+          settingsData
+      );
+
+      const updatedWorkspace = data.workspace || data;
+
+      if (updatedWorkspace && updatedWorkspace._id) {
+        dispatch(setCurrentWorkspace(updatedWorkspace));
+        if (Array.isArray(workspace.workspaces)) {
+          dispatch(
+            setWorkspaces(
+              workspace.workspaces.map((item) =>
+                item._id === workspaceId ? updatedWorkspace : item
+              )
+            )
+          );
+        }
+      }
+
+      return updatedWorkspace;
+    } catch (error) {
+      dispatch(setError(error.message));
+      throw error;
+    } finally {
+      dispatch(setLoading(false));
+    }
 };
 
 const archiveCurrentWorkspace = async (

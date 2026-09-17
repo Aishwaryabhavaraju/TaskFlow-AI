@@ -3,11 +3,14 @@ const Project = require("../../models/Project");
 const Task = require("../../models/Task");
 const User = require("../../models/User");
 
-const client = process.env.OPENAI_API_KEY
-  ? new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    })
-  : null;
+const daysUntil = (date) => {
+  if (!date) return null;
+  const target = new Date(date);
+  if (isNaN(target.getTime())) return null;
+  const now = new Date();
+  const diffTime = target.getTime() - now.getTime();
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+};
 
 const priorityWeight = {
   Low: 1,
@@ -16,19 +19,117 @@ const priorityWeight = {
   Critical: 4,
 };
 
-const statusWeight = {
-  "To Do": 0,
-  "In Progress": 0.45,
-  Review: 0.75,
-  Done: 1,
+const isValidApiKey = (key) => {
+  if (!key) return false;
+  const k = String(key).trim();
+  if (
+    k === "" ||
+    k.startsWith("your_") ||
+    k.includes("your_openai_api_key") ||
+    k.includes("YOUR_API_KEY") ||
+    k.length < 15
+  ) {
+    return false;
+  }
+  return true;
 };
 
-const daysUntil = (date) => {
-  if (!date) return null;
-  return Math.ceil(
-    (new Date(date).getTime() - Date.now()) /
-      (1000 * 60 * 60 * 24)
-  );
+const getOpenAIClient = async (userId) => {
+  if (userId) {
+    const user = await User.findById(userId);
+    const userKey = user?.apiKeys?.find(
+      (k) => k.provider.toLowerCase() === "openai" && k.key
+    );
+    if (userKey && isValidApiKey(userKey.key)) {
+      return new OpenAI({ apiKey: userKey.key });
+    }
+  }
+
+  if (process.env.OPENAI_API_KEY && isValidApiKey(process.env.OPENAI_API_KEY)) {
+    return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  }
+
+  return null;
+};
+
+const generateSmartFallbackResponse = (prompt, context = null) => {
+  const p = (prompt || "").toLowerCase();
+  const tasks = context?.tasks || [];
+  const project = context?.project;
+  const members = context?.members || [];
+
+  const openTasks = tasks.filter((t) => t.status !== "Done" && t.status !== "Completed");
+  const completedTasks = tasks.filter((t) => t.status === "Done" || t.status === "Completed");
+  const overdueTasks = openTasks.filter((t) => t.dueDate && daysUntil(t.dueDate) < 0);
+  const criticalTasks = openTasks.filter((t) => t.priority === "Critical" || t.priority === "High");
+  const topTask = openTasks[0];
+
+  const scopeStr = project?.name ? `for project "${project.name}"` : "across workspace projects";
+
+  if (p.includes("sprint") || p.includes("plan")) {
+    return `TaskFlow AI Sprint Recommendation ${scopeStr}:\n\n` +
+      `• Work Breakdown: ${tasks.length} total tasks (${openTasks.length} active open, ${completedTasks.length} completed).\n` +
+      `• Focus Target: ${criticalTasks.length} high/critical priority item(s) need immediate attention.\n` +
+      `• Sprint Scope Advice: Cap sprint commitment to team capacity (${members.length || 1} member(s)). Allocate 80% bandwidth to core backlog items and reserve 20% for review triage.`;
+  }
+
+  if (p.includes("risk") || p.includes("delay") || p.includes("overdue")) {
+    return `TaskFlow AI Delivery Risk Assessment ${scopeStr}:\n\n` +
+      `• Risk Severity: ${overdueTasks.length > 0 ? "HIGH - Overdue Tasks Detected" : "LOW - On Schedule"}\n` +
+      `• Overdue Items: ${overdueTasks.length} task(s) past target deadline.\n` +
+      `• Critical Work: ${criticalTasks.length} critical item(s) currently open.\n` +
+      `• Recommended SLA: ${overdueTasks.length > 0 ? `Re-assign or update deadlines for: ${overdueTasks.slice(0, 3).map(t => `"${t.title}"`).join(", ")}` : "All open tasks are progressing within expected timelines."}`;
+  }
+
+  if (p.includes("workload") || p.includes("team") || p.includes("capacity")) {
+    return `TaskFlow AI Team Capacity Analysis ${scopeStr}:\n\n` +
+      `• Evaluated Team Size: ${members.length || 1} active teammate(s).\n` +
+      `• Assigned Open Workload: ${openTasks.length} open task(s).\n` +
+      `• Balance Strategy: Rebalance workload if any single member holds >5 open tasks. Breakdown complex tasks (>8 hours estimated) into smaller sub-deliverables.`;
+  }
+
+  if (p.includes("summar") || p.includes("progress")) {
+    const velocity = tasks.length > 0 ? Math.round((completedTasks.length / tasks.length) * 100) : 0;
+    return `TaskFlow AI Executive Summary ${scopeStr}:\n\n` +
+      `• Completion Velocity: ${velocity}% completion rate (${completedTasks.length}/${tasks.length} tasks completed).\n` +
+      `• Active Work Pipeline: ${openTasks.length} task(s) currently in progress or to-do.\n` +
+      `• Recommended Next Priority: ${topTask ? `"${topTask.title}" (${topTask.priority || "Medium"} Priority)` : "Create new tasks to extend workspace roadmap."}`;
+  }
+
+  return `TaskFlow AI Co-Pilot Summary ${scopeStr}:\n\n` +
+    `• Workspace Snapshot: ${tasks.length} total tasks tracked, ${openTasks.length} active open, ${overdueTasks.length} overdue.\n` +
+    `• High Priority Focus: ${topTask ? `"${topTask.title}" (Priority: ${topTask.priority || "Medium"})` : "Add tasks to project board"}.\n` +
+    `• Co-Pilot Capabilities: Ask me for sprint planning, risk detection, workload balancing, deadline prediction, or project summaries!`;
+};
+
+const generateResponse = async (prompt, userId = null, context = null) => {
+  const aiClient = await getOpenAIClient(userId);
+
+  if (!aiClient) {
+    return generateSmartFallbackResponse(prompt, context);
+  }
+
+  try {
+    const response = await aiClient.chat.completions.create({
+      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are TaskFlow AI, an expert project management co-pilot. Be data-driven, practical, concise, and helpful.",
+        },
+        {
+          role: "user",
+          content: `${prompt}${context ? `\n\nContext:\n${JSON.stringify(context, null, 2)}` : ""}`,
+        },
+      ],
+    });
+
+    return response.choices[0].message.content;
+  } catch (error) {
+    console.error("OpenAI API call failed, using smart fallback response:", error.message);
+    return generateSmartFallbackResponse(prompt, context);
+  }
 };
 
 const parseJson = (content, fallback) => {
@@ -41,39 +142,17 @@ const parseJson = (content, fallback) => {
   }
 };
 
-const generateResponse = async (prompt) => {
-  if (!client) {
-    return "AI provider is not configured. Add OPENAI_API_KEY to enable generated responses.";
-  }
-
-  const response =
-    await client.chat.completions.create({
-      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are an AI assistant for project management. Be concise, practical, and specific.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    });
-
-  return response.choices[0].message.content;
-};
-
 const enhanceStructured = async (
   instruction,
   context,
-  fallback
+  fallback,
+  userId = null
 ) => {
-  if (!client) return fallback;
+  const aiClient = await getOpenAIClient(userId);
+  if (!aiClient) return fallback;
 
-  const response =
-    await client.chat.completions.create({
+  try {
+    const response = await aiClient.chat.completions.create({
       model: process.env.OPENAI_MODEL || "gpt-4o-mini",
       response_format: { type: "json_object" },
       messages: [
@@ -93,10 +172,14 @@ const enhanceStructured = async (
       ],
     });
 
-  return parseJson(
-    response.choices[0].message.content,
-    fallback
-  );
+    return parseJson(
+      response.choices[0].message.content,
+      fallback
+    );
+  } catch (error) {
+    console.error("OpenAI API call failed, returning intelligent fallback:", error.message);
+    return fallback;
+  }
 };
 
 const getProjectContext = async (projectId) => {

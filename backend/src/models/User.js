@@ -165,6 +165,16 @@ const userSchema = new mongoose.Schema(
         default: false,
       },
     },
+
+    apiKeys: [
+      {
+        provider: { type: String, required: true },
+        model: { type: String, default: "" },
+        key: { type: String, required: true },
+        status: { type: String, default: "Connected" },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   {
     timestamps: true,

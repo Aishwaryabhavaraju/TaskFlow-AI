@@ -48,7 +48,7 @@ export default function DailyCalendar({
       nowIndicator={true}
       editable={true}
       selectable={true}
-      allDaySlot={false}
+      allDaySlot={true}
       slotMinTime="06:00:00"
       slotMaxTime="22:00:00"
       eventContent={(info) => (

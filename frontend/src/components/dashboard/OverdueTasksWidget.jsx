@@ -1,3 +1,14 @@
+const formatDueDate = (dateString) => {
+  if (!dateString) return "No due date";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString;
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
 export default function OverdueTasksWidget({
   tasks,
 }) {
@@ -15,14 +26,14 @@ export default function OverdueTasksWidget({
         tasks.map((task) => (
           <div
             key={task._id}
-            className="mb-3 rounded-lg border border-red-300 p-3"
+            className="mb-3 rounded-lg border border-red-300 p-3 dark:border-red-900/50 dark:bg-red-950/20"
           >
             <h3 className="font-medium">
               {task.title}
             </h3>
 
-            <p className="text-sm text-red-500">
-              Due: {task.dueDate}
+            <p className="mt-1 text-xs font-semibold text-red-500 dark:text-red-400">
+              Due: {formatDueDate(task.dueDate)}
             </p>
           </div>
         ))

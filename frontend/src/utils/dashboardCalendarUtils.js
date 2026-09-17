@@ -1,10 +1,10 @@
 export const getTodayTasks = (tasks) => {
-  const today = new Date().toDateString();
+  const todayStr = new Date().toDateString();
 
   return tasks.filter(
     (task) =>
-      new Date(task.dueDate).toDateString() ===
-      today
+      task?.dueDate &&
+      new Date(task.dueDate).toDateString() === todayStr
   );
 };
 
@@ -12,7 +12,10 @@ export const getUpcomingTasks = (tasks) => {
   const today = new Date();
 
   return tasks.filter(
-    (task) => new Date(task.dueDate) > today
+    (task) =>
+      task?.dueDate &&
+      new Date(task.dueDate) > today &&
+      !/done|completed/i.test(task.status || "")
   );
 };
 
@@ -21,7 +24,9 @@ export const getOverdueTasks = (tasks) => {
 
   return tasks.filter(
     (task) =>
+      task?.dueDate &&
       new Date(task.dueDate) < today &&
-      task.status !== "Done"
+      new Date(task.dueDate).toDateString() !== today.toDateString() &&
+      !/done|completed/i.test(task.status || "")
   );
 };

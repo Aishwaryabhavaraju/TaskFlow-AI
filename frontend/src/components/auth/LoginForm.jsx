@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { AlertCircle } from "lucide-react";
 
 import AuthHeader from "./AuthHeader";
 import Input from "../common/Input";
@@ -17,6 +18,7 @@ import { loginUser, clearError } from "../../redux/slices/authSlice";
 export default function LoginForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const {
     loading,
@@ -39,6 +41,7 @@ export default function LoginForm() {
   });
 
   const onSubmit = (data) => {
+    setErrorMessage("");
     dispatch(
       loginUser({
         email: data.email,
@@ -57,7 +60,7 @@ export default function LoginForm() {
   useEffect(() => {
     if (error) {
       toast.error(error);
-
+      setErrorMessage(error);
       dispatch(clearError());
     }
   }, [error, dispatch]);
@@ -70,9 +73,17 @@ export default function LoginForm() {
         subtitle="Sign in to continue using TaskFlow AI."
       />
 
+      {errorMessage && (
+        <div className="mb-5 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-3.5 text-sm text-red-600 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-400">
+          <AlertCircle size={18} className="shrink-0 text-red-500" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
       <Input
         label="Email"
         type="email"
+        autoComplete="email"
         placeholder="Enter your email"
         error={errors.email?.message}
         {...register("email")}
@@ -80,6 +91,7 @@ export default function LoginForm() {
 
       <PasswordInput
         label="Password"
+        autoComplete="current-password"
         placeholder="Enter your password"
         error={errors.password?.message}
         {...register("password")}

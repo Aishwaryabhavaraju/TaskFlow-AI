@@ -8,24 +8,17 @@ exports.createProject = async (req, res) => {
   owner: req.user._id,
 });
 
-for (const memberId of project.members) {
-
-  await notificationService.createNotification({
-
-    recipient: memberId,
-
-    sender: req.user._id,
-
-    type: "PROJECT_CREATED",
-
-    title: "New Project",
-
-    message: `${project.name} has been created.`,
-
-    project: project._id,
-
-  });
-
+for (const memberId of (project.members || [])) {
+  if (memberId.toString() !== req.user._id.toString()) {
+    await notificationService.createNotification({
+      recipient: memberId,
+      sender: req.user._id,
+      type: "PROJECT_CREATED",
+      title: "New Project",
+      message: `${project.name} has been created.`,
+      project: project._id,
+    });
+  }
 }
 
 res.status(201).json({

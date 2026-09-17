@@ -22,23 +22,23 @@ import ThemeToggle from "../../components/common/ThemeToggle";
 
 const features = [
   {
-    title: "AI planning",
-    description: "Turn rough goals into projects, milestones, and suggested tasks.",
+    title: "AI Planning & Generation",
+    description: "Turn rough goals into structured projects, milestones, subtasks, and automated assignees in seconds.",
     icon: Bot,
   },
   {
-    title: "Task boards",
-    description: "Move work through focused Kanban flows with priorities and owners.",
+    title: "Interactive Kanban Boards",
+    description: "Move work through focused Kanban flows with custom columns, priority tags, and owner filters.",
     icon: KanbanSquare,
   },
   {
-    title: "Team context",
-    description: "Keep comments, activity, files, and decisions attached to the work.",
+    title: "Team Context & Activity",
+    description: "Keep member comments, status changes, file attachments, and historical audit logs connected.",
     icon: MessageSquareText,
   },
   {
-    title: "Live analytics",
-    description: "See workload, deadlines, completion trends, and project health.",
+    title: "Live Velocity Analytics",
+    description: "Track completion rates, workload distribution, upcoming deadlines, and risk alerts automatically.",
     icon: BarChart3,
   },
 ];

@@ -1,5 +1,7 @@
 const taskService = require("./task.service");
 const notificationService = require("../notification/notification.service");
+const Project = require("../../models/Project");
+const Board = require("../../models/Board");
 
 const toId = (value) => {
   if (!value) return null;
@@ -26,20 +28,59 @@ const sendTaskNotifications = async (
   actorId,
   payload
 ) => {
+  const recipients = uniqueRecipients(task, actorId);
+  if (recipients.length === 0) return;
+
   await notificationService.createNotifications(
-    uniqueRecipients(task, actorId),
+    recipients,
     {
       sender: actorId,
-      task: task._id,
-      project: task.project,
       ...payload,
     }
   );
 };
 
 exports.createTask = async (req, res) => {
+  let { project, board, columnId, status } = req.body;
+
+  if (!project) {
+    const defaultProject = await Project.findOne({ isDeleted: false });
+    if (defaultProject) {
+      project = defaultProject._id;
+    }
+  }
+
+  if (project && (!board || !columnId)) {
+    let boardDoc = await Board.findOne({ project });
+    if (!boardDoc) {
+      boardDoc = await Board.create({
+        name: "Default Board",
+        project,
+        boardType: "kanban",
+        isDefault: true,
+        columns: [
+          { name: "To Do", color: "#6B7280", order: 1 },
+          { name: "In Progress", color: "#3B82F6", order: 2 },
+          { name: "Review", color: "#F59E0B", order: 3 },
+          { name: "Done", color: "#10B981", order: 4 },
+        ],
+      });
+    }
+    board = boardDoc._id;
+    if (!columnId) {
+      const colName = status || "To Do";
+      const targetCol = boardDoc.columns.find(
+        (c) => c.name.toLowerCase() === colName.toLowerCase()
+      ) || boardDoc.columns[0];
+      columnId = targetCol._id;
+    }
+  }
+
   const task = await taskService.createTask({
     ...req.body,
+    project,
+    board,
+    columnId,
     createdBy: req.user._id,
     watchers: [
       req.user._id,

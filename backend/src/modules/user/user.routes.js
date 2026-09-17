@@ -11,6 +11,9 @@ const {
     searchUsers,
     getUserById,
     deactivateAccount,
+    getApiKeys,
+    saveApiKey,
+    deleteApiKey,
 } = require("./user.controller");
 
 const {
@@ -60,6 +63,24 @@ router.get(
   "/search",
   protect,
   searchUsers
+);
+
+router.get(
+  "/api-keys",
+  protect,
+  getApiKeys
+);
+
+router.post(
+  "/api-keys",
+  protect,
+  saveApiKey
+);
+
+router.delete(
+  "/api-keys/:provider",
+  protect,
+  deleteApiKey
 );
 
 router.get(

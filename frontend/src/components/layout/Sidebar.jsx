@@ -5,28 +5,26 @@ import SidebarItem from "./SidebarItem";
 import SidebarSection from "./SidebarSection";
 import { sidebarItems } from "./sidebarData";
 
+import useWorkspace from "../../hooks/useWorkspace";
+
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const { currentWorkspace } = useWorkspace();
 
   return (
     <aside
       className={`
-        ${
-          collapsed ? "w-24" : "w-72"
-        }
-
+        ${collapsed ? "w-20" : "w-64"}
         hidden
         md:flex
-
         flex-col
-
+        shrink-0
+        h-full
         border-r
         border-zinc-200
         dark:border-zinc-800
-
         bg-white
         dark:bg-zinc-900
-
         transition-all
         duration-300
       `}
@@ -79,7 +77,6 @@ export default function Sidebar() {
 
       {!collapsed && (
         <div className="p-5">
-
           <div
             className="
             rounded-xl
@@ -92,11 +89,10 @@ export default function Sidebar() {
               WORKSPACE
             </p>
 
-            <h2 className="mt-1 font-bold">
-              My Workspace
+            <h2 className="mt-1 font-bold truncate">
+              {currentWorkspace?.name || "My Workspace"}
             </h2>
           </div>
-
         </div>
       )}
 

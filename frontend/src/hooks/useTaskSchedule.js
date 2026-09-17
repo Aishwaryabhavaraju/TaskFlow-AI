@@ -29,12 +29,10 @@ export default function useTaskSchedule() {
       );
 
       return data.task;
-    } catch (error) {
+    } catch {
       toast.error(
         "Failed to update schedule."
       );
-
-      console.error(error);
     }
   };
 

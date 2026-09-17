@@ -133,7 +133,6 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.deactivateAccount = async (req, res) => {
-
   await User.findByIdAndUpdate(
     req.user._id,
     {
@@ -142,9 +141,72 @@ exports.deactivateAccount = async (req, res) => {
     }
   );
 
+  res.clearCookie("token");
+  res.clearCookie("jwt");
+
   res.status(200).json({
     success: true,
     message: "Account deactivated successfully",
   });
+};
 
+exports.getApiKeys = async (req, res) => {
+  try {
+    const keys = await userService.getApiKeys(req.user._id);
+    res.status(200).json({
+      success: true,
+      data: keys,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.saveApiKey = async (req, res) => {
+  try {
+    const { provider, model, key } = req.body;
+    if (!provider || !key) {
+      return res.status(400).json({
+        success: false,
+        message: "Provider and API Key are required",
+      });
+    }
+
+    const keys = await userService.saveApiKey(req.user._id, {
+      provider,
+      model,
+      key,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "API Key saved successfully",
+      data: keys,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.deleteApiKey = async (req, res) => {
+  try {
+    const { provider } = req.params;
+    const keys = await userService.deleteApiKey(req.user._id, provider);
+    res.status(200).json({
+      success: true,
+      message: "API Key removed",
+      data: keys,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };

@@ -116,21 +116,23 @@ export const resetPasswordUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
   "auth/logout",
   async () => {
-    await logout();
-
-    localStorage.removeItem("token");
+    try {
+      await logout();
+    } catch {
+      // Ignored
+    } finally {
+      localStorage.removeItem("token");
+    }
   }
 );
 
+const existingToken = localStorage.getItem("token");
+
 const initialState = {
   user: null,
-
-  token: localStorage.getItem("token"),
-
-  isAuthenticated: !!localStorage.getItem("token"),
-
-  loading: false,
-
+  token: existingToken,
+  isAuthenticated: !!existingToken,
+  loading: !!existingToken,
   error: null,
 };
 
@@ -256,10 +258,15 @@ const authSlice = createSlice({
 
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
-
         state.token = null;
-
         state.isAuthenticated = false;
+        state.loading = false;
+      })
+      .addCase(logoutUser.rejected, (state) => {
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+        state.loading = false;
       });
   },
 });

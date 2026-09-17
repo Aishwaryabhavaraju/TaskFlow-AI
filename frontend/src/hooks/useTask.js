@@ -30,8 +30,7 @@ export default function useTask() {
 
     try {
       const data = await taskService.getTasks(projectId);
-
-      dispatch(setTasks(data.tasks || data.data));
+      dispatch(setTasks(data.tasks || data.data || []));
     } catch (err) {
       dispatch(setError(err.message));
     } finally {
@@ -48,14 +47,17 @@ export default function useTask() {
 
     try {
       const data = await taskService.createTask(payload);
+      const createdTask = data.task || data.data || data;
 
-      dispatch(addTask(data.task || data.data));
+      if (createdTask && createdTask._id) {
+        dispatch(addTask(createdTask));
+        socket.emit("taskCreated", createdTask);
+      }
 
-      socket.emit("taskCreated", data.task || data.data);
-
-      return data.task || data.data;
+      return createdTask;
     } catch (err) {
       dispatch(setError(err.message));
+      throw err;
     } finally {
       dispatch(setLoading(false));
     }
@@ -69,16 +71,13 @@ export default function useTask() {
     dispatch(setLoading(true));
 
     try {
-      const data = await taskService.updateTask(
-        id,
-        payload
-      );
+      const data = await taskService.updateTask(id, payload);
+      const updated = data.task || data.data || data;
 
-      dispatch(updateTask(data.task || data.data));
+      dispatch(updateTask(updated));
+      socket.emit("taskUpdated", updated);
 
-      socket.emit("taskUpdated", data.task || data.data);
-
-      return data.task || data.data;
+      return updated;
     } catch (err) {
       dispatch(setError(err.message));
     } finally {
@@ -90,20 +89,13 @@ export default function useTask() {
   // Move Task
   // ----------------------------
 
-  const moveTask = async (
-    taskId,
-    status
-  ) => {
+  const moveTask = async (taskId, status) => {
     try {
-      const data =
-        await taskService.updateTaskStatus(
-          taskId,
-          status
-        );
+      const data = await taskService.updateTaskStatus(taskId, status);
+      const moved = data.task || data.data || data;
 
-      dispatch(updateTask(data.task || data.data));
-
-      socket.emit("taskMoved", data.task || data.data);
+      dispatch(updateTask(moved));
+      socket.emit("taskMoved", moved);
     } catch (err) {
       dispatch(setError(err.message));
     }
@@ -113,16 +105,12 @@ export default function useTask() {
   // Delete Task
   // ----------------------------
 
-  const deleteExistingTask = async (
-    id
-  ) => {
+  const deleteExistingTask = async (id) => {
     dispatch(setLoading(true));
 
     try {
       await taskService.deleteTask(id);
-
       dispatch(removeTask(id));
-
       socket.emit("taskDeleted", id);
     } catch (err) {
       dispatch(setError(err.message));
@@ -152,12 +140,10 @@ export default function useTask() {
       dispatch(removeTask(id));
     });
 
-    socket.on(
-      "taskScheduleUpdated",
-      task => {
-        dispatch(updateTask(task));
-      }
-    );
+    socket.on("taskScheduleUpdated", (task) => {
+      dispatch(updateTask(task));
+    });
+
     return () => {
       socket.off("taskCreated");
       socket.off("taskUpdated");

@@ -110,6 +110,10 @@ export default function AppRoutes() {
           path="/tasks"
           element={privatePage(<TaskBoard />)}
         />
+        <Route
+          path="/my-tasks"
+          element={privatePage(<TaskBoard />)}
+        />
 
         <Route
           path="/teams"
@@ -198,6 +202,10 @@ export default function AppRoutes() {
 
         <Route
           path="/ai"
+          element={privatePage(<AIAssistantPage />)}
+        />
+        <Route
+          path="/ai-assistant"
           element={privatePage(<AIAssistantPage />)}
         />
 

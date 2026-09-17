@@ -34,10 +34,16 @@ export default function TaskBoard() {
   } = useTaskFilters();
 
   const [openModal, setOpenModal] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("To Do");
 
   useEffect(() => {
     fetchTasks(projectId);
   }, [projectId]);
+
+  const handleOpenModal = (status = "To Do") => {
+    setSelectedStatus(status);
+    setOpenModal(true);
+  };
 
   // Apply filters and sorting
   const filteredTasks = sortTasks(
@@ -50,7 +56,7 @@ export default function TaskBoard() {
       {/* Page Header */}
       <div className="mb-6 flex items-center justify-between">
         <TaskBoardHeader
-          onCreateTask={() => setOpenModal(true)}
+          onCreateTask={() => handleOpenModal("To Do")}
         />
 
         <LiveIndicator />
@@ -68,13 +74,11 @@ export default function TaskBoard() {
       {/* Kanban Board */}
       <TaskBoardContainer>
         {loading ? (
-          <p className="py-10 text-center">
+          <p className="py-10 text-center text-zinc-500">
             Loading Tasks...
           </p>
-        ) : filteredTasks.length === 0 ? (
-          <EmptyTaskBoard />
         ) : (
-          <KanbanBoard tasks={filteredTasks} />
+          <KanbanBoard tasks={filteredTasks} onAddTask={handleOpenModal} />
         )}
       </TaskBoardContainer>
 
@@ -83,6 +87,7 @@ export default function TaskBoard() {
         open={openModal}
         onClose={() => setOpenModal(false)}
         projectId={projectId}
+        initialStatus={selectedStatus}
       />
     </DashboardLayout>
   );
